@@ -1,6 +1,8 @@
 Compiling:
 
-To compile, simply run the command "make" when in this assignment's root directory. This will create a new executable called "a4".
+To compile ON MACS, simply run the command "make" when in this assignment's root directory. This will create a new executable called "a4".
+
+To compile ON LINUX, save MakeFile.linux over MakeFile and run "make"
 
 Running:
 
