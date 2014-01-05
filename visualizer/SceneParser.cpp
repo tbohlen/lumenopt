@@ -302,15 +302,17 @@ Group* SceneParser::parseGroup() {
             assert (index >= 0 && index <= getNumMaterials());
             current_material = getMaterial(index);
         } else {
-            Object3D *object = parseObject(token);
+            // NOTE: Modified this to convert to a shared_ptr to work with new
+            // group implementation
+            ObjPtr object( parseObject(token) );
             assert (object != NULL);
             answer->addObject(count,object);
-	    
+
             count++;
         }
     }
     getToken(token); assert (!strcmp(token, "}"));
-    
+
     // return the group
     return answer;
 }

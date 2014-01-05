@@ -5,6 +5,7 @@
 #include "Object3D.h"
 #include "Ray.h"
 #include "Hit.h"
+#include "types.h"
 #include <iostream>
 
 using  namespace std;
@@ -41,7 +42,7 @@ class Group:public Object3D
             return intersected;
         }
 
-        void addObject( int index , Object3D* obj ){
+        void addObject( int index , ObjPtr obj ){
             objects[index] = obj;
         }
 
@@ -50,7 +51,7 @@ class Group:public Object3D
         }
 
     private:
-        vector<Object3D*> objects;
+        vector<ObjPtr> objects;
 };
 
 #endif
