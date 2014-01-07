@@ -42,11 +42,15 @@ class Group:public Object3D
             return intersected;
         }
 
-        void addObject( int index , ObjPtr obj ){
+        void addObject( int index , const ObjPtr obj ){
             objects[index] = obj;
         }
 
-        int getGroupSize(){
+        void appendObject( const ObjPtr obj ){
+            objects.push_back(obj);
+        }
+
+        int getGroupSize() const {
             return objects.size();
         }
 
