@@ -61,21 +61,20 @@ indices BuildingParser::getIndices(int index) {
 
 void BuildingParser::buildGroup() {
     int i;
+    // move things into the group from the triangles vector
+
+    // guess a starting size
+    this->group = new Group( ceil( plan.size()/3 ) );
+
     for (i = 0; i < plan.size(); i++) {
         if (plan[i]) {
             // if this piece of floor exists, then build it
             indices inds = getIndices(i);
             pair<ObjPtr, ObjPtr> rectangle = this->buildRectangle(inds.x, inds.y, inds.z);
             // temporarily store the triangles in our triangles vector
-            this->triangles.push_back(rectangle.first);
-            this->triangles.push_back(rectangle.second);
+            this->group->appendObject(rectangle.first);
+            this->group->appendObject(rectangle.second);
         }
-    }
-
-    // move things into the group from the triangles vector
-    this->group = new Group(this->triangles.size());
-    for (i = 0; i < this->triangles.size(); i++) {
-        this->group->addObject(i, this->triangles[i]);
     }
 }
 
