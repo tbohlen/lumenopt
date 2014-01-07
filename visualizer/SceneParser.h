@@ -34,6 +34,7 @@ class SceneParser
 public:
 
     SceneParser( const char* filename );
+    SceneParser( const SceneParser& sceneParser );
     ~SceneParser();
 
     Camera* getCamera() const
@@ -50,15 +51,19 @@ public:
     {
         return ambient_light;
     }
-    
+
+    vector<Light*> getLights() const {
+        return this->lights;
+    }
+
     int getNumLights() const
     {
-        return num_lights;
+        return this->lights.size();
     }
-    
+
     Light* getLight( int i ) const
     {
-        assert( i >= 0 && i < num_lights );
+        assert( i >= 0 && i < lights.size() );
         return lights[i];
     }
 
@@ -77,6 +82,10 @@ public:
     {
         return group;
     }
+
+    void addLight(Light *light);
+
+    void addObject(const ObjPtr object);
 
 private:
 
@@ -112,8 +121,7 @@ private:
     Camera* camera;
     Vector3f background_color;
     Vector3f ambient_light;
-    int num_lights;
-    Light** lights;
+    std::vector<Light*> lights;
     int num_materials;
     Material** materials;
     Material* current_material;

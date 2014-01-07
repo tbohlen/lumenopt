@@ -24,8 +24,6 @@ SceneParser::SceneParser(const char* filename) {
     camera = NULL;
     background_color = Vector3f(0.5,0.5,0.5);
     ambient_light = Vector3f(0,0,0);
-    num_lights = 0;
-    lights = NULL;
     num_materials = 0;
     materials = NULL;
     current_material = NULL;
@@ -50,28 +48,57 @@ SceneParser::SceneParser(const char* filename) {
 
     // if no lights are specified, set ambient light to white
     // (do solid color ray casting)
-    if (num_lights == 0) {
+    if (lights.size() == 0) {
         printf ("WARNING:    No lights specified\n");
         ambient_light = Vector3f(1,1,1);
     }
 }
 
+SceneParser::SceneParser(const SceneParser& sceneParser) {
+
+    int i;
+
+    // initialize some reasonable default values
+    group = sceneParser.getGroup();
+    camera = sceneParser.getCamera();
+    background_color = sceneParser.getBackgroundColor();
+    ambient_light = sceneParser.getAmbientLight();
+
+    lights = sceneParser.getLights();
+
+    num_materials = sceneParser.getNumMaterials();
+
+    materials = new Material*[num_materials];
+
+    for (i = 0; i < num_materials; i++) {
+        materials[i] = sceneParser.getMaterial(i);
+    }
+
+    // only used in parsing. If copied, we are not parsing so this is irrelevant
+    current_material = NULL;
+}
+
 SceneParser::~SceneParser() {
-    if (group != NULL) 
+    if (group != NULL)
         delete group;
-    if (camera != NULL) 
+    if (camera != NULL)
         delete camera;
     int i;
     for (i = 0; i < num_materials; i++) {
         delete materials[i]; }
     delete [] materials;
-    for (i = 0; i < num_lights; i++) {
-        delete lights[i]; }
-    delete [] lights;
 }
 
 // ====================================================================
 // ====================================================================
+
+void SceneParser::addLight(Light *light) {
+    this->lights.push_back(light);
+};
+
+void SceneParser::addObject(const ObjPtr object) {
+    this->group->appendObject(object);
+};
 
 void SceneParser::parseFile() {
     //
@@ -145,8 +172,8 @@ void SceneParser::parseLights() {
     getToken(token); assert (!strcmp(token, "{"));
     // read in the number of objects
     getToken(token); assert (!strcmp(token, "numLights"));
-    num_lights = readInt();
-    lights = new Light*[num_lights];
+    int num_lights = readInt();
+    lights.resize(num_lights);
     // read in the objects
     int count = 0;
     while (num_lights > count) {
@@ -159,8 +186,8 @@ void SceneParser::parseLights() {
 		}
 		else {
             printf ("Unknown token in parseLight: '%s'\n", token); 
-            exit(0);    
-        }     
+            exit(0);
+        }
         count++;
     }
     getToken(token); assert (!strcmp(token, "}"));
