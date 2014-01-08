@@ -9,6 +9,16 @@ typedef struct {
     int z;
 } indices;
 
+typedef struct {
+    float x;
+    float y;
+    float z;
+} coord;
+
 typedef boost::shared_ptr<Object3D> ObjPtr;
+
+typedef std::vector<std::vector<std::vector<bool>>> boolMatrix;
+
+typedef std::vector<std::vector<std::vector<coord>>> coordMatrix;
 
 #endif
