@@ -2,9 +2,8 @@
 #define MESH_H
 #include <vector>
 #include "types.h"
-#include "Group.h"
-#include "Material.h"
-#include "Object3D.h"
+
+class Material;
 
 /*
  * Class: BuildingParser
@@ -31,7 +30,7 @@ class BuildingParser {
          * yDivs - the number of divisions along the y axis
          * zDivs - the number of divisions along the z axis
          */
-        BuildingParser(std::vector<vector<vector<bool> > > plan, float xSize, float ySize, float zSize);
+        BuildingParser(std::vector<std::vector<std::vector<bool> > > plan, float xSize, float ySize, float zSize);
 
         /*
          * Deconstructor
@@ -48,7 +47,7 @@ class BuildingParser {
         GroupPtr getGroup();
 
     private:
-        std::vector<vector<vector<bool> > > plan;
+        std::vector<std::vector<std::vector<bool> > > plan;
         int xDivs;
         int yDivs;
         int zDivs;

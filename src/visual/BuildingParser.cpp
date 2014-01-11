@@ -1,6 +1,9 @@
 #include "BuildingParser.hpp"
 #include <math.h>
-#include "Vector3f.h"
+#include "Group.h"
+#include "Material.h"
+#include "Object3D.h"
+#include "vecmath.h"
 #include "Triangle.h"
 
 using namespace std;
