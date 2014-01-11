@@ -1,0 +1,26 @@
+PerspectiveCamera {
+    center 0 3 15
+    direction 0 -0.2 -1
+    up 0 1 0
+    angle 45
+}
+
+Background {
+    color 0.6 0.6 0.9
+    ambientLight 0.1 0.1 0.1
+}
+
+Materials {
+    numMaterials 1
+    Material { diffuseColor 0.1 1 0.1 }
+}
+
+Group {
+    numObjects 1
+    MaterialIndex 0
+    Plane {
+        normal 0 1 0
+        offset -2
+    }
+}
+

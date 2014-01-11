@@ -1,13 +1,10 @@
 #ifndef MESH_H
 #define MESH_H
 #include <vector>
-#include "Triangle.h"
-#include "Object3D.h"
-#include "Vector4f.h"
-#include "Group.h"
 #include "types.h"
+#include "Group.h"
 #include "Material.h"
-#include "boost/shared_ptr.hpp"
+#include "Object3D.h"
 
 /*
  * Class: BuildingParser
@@ -34,7 +31,7 @@ class BuildingParser {
          * yDivs - the number of divisions along the y axis
          * zDivs - the number of divisions along the z axis
          */
-        BuildingParser(std::vector<int> plan, int xDivs, int yDivs, int zDivs, float xSize, float ySize, float zSize);
+        BuildingParser(std::vector<vector<vector<bool> > > plan, float xSize, float ySize, float zSize);
 
         /*
          * Deconstructor
@@ -48,10 +45,10 @@ class BuildingParser {
          * builds the group by constructing a series of triangles that define
          * the building's floors.
          */
-        Group* getGroup();
+        GroupPtr getGroup();
 
     private:
-        std::vector<int> plan;
+        std::vector<vector<vector<bool> > > plan;
         int xDivs;
         int yDivs;
         int zDivs;
@@ -61,9 +58,8 @@ class BuildingParser {
         float xDivSize;
         float yDivSize;
         float zDivSize;
-        Material* material;
-        Group* group;
-        std::vector<ObjPtr> triangles;
+        Material *material;
+        GroupPtr group;
 
         /*
          * Method: buildRectangle
@@ -82,29 +78,12 @@ class BuildingParser {
         std::pair<ObjPtr, ObjPtr> buildRectangle(int x, int y, int z);
 
         /*
-         * Method: getIndices
-         *
-         * Finds the x, y, and z indices of the floor square at index in the
-         * building plan.
-         *
-         * Arguments:
-         * index - the index in the building plan vector for which we would like
-         * the indices
-         *
-         * Returns a indices object containing the x, y, and z indices
-         * caluclated.
-         */
-        indices getIndices(int index);
-
-        /*
          * Method: buildGroup
          *
          * Builds the group of triangles that represents the building. The group
          * is stored in this->group but not returned.
          */
         void buildGroup();
-
-
 };
 
 #endif

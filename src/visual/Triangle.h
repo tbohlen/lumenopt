@@ -23,6 +23,16 @@ public:
           this->c = c;
 	}
 
+	Triangle( const Vector3f& a, const Vector3f& b, const Vector3f& c, Material* m, Vector3f *normals):Object3D(m){
+          hasTex = false;
+          this->a = a;
+          this->b = b;
+          this->c = c;
+          this->normals[0] = normals[0];
+          this->normals[1] = normals[1];
+          this->normals[2] = normals[2];
+	}
+
 	virtual bool intersect( const Ray& r,  Hit& h , float tmin){
         Vector3f dir = r.getDirection();
         Vector3f origin = r.getOrigin();

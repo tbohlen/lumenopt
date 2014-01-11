@@ -5,49 +5,40 @@
 
 using namespace std;
 
-ImageMaker::ImageMaker(SceneParser *baseScene) : sun(NULL), baseScene(baseScene), completeScene(NULL) {
+ImageMaker::ImageMaker(SceneParser *baseScene) : baseScene(baseScene), completeScene(NULL) {
 
 }
 
 ImageMaker::~ImageMaker() {
-    if(sun != NULL) {
-        delete sun;
-    }
-    if(baseScene != NULL) {
-        delete baseScene;
-    }
     if(completeScene != NULL) {
         delete completeScene;
     }
 }
 
-void ImageMaker::makeImageOfScene(const Vector3f &sunPos, const ObjPtr building, int resolution, char *fileName) {
-    Light *sun = this->makeSun(sunPos);
+void ImageMaker::makeImageOfScene(Vector3f &sunPos, const GroupPtr building, int resolution, const char *filename) {
+    sunPos.negate();
+    LightPtr sun = this->makeSun(sunPos);
     SceneParser *scene = this->readyScene(sun, building);
-    this->makeImage(scene, resolution, fileName);
+    this->makeImage(scene, resolution, filename);
 }
 
-Light* ImageMaker::makeSun(const Vector3f &sunPos) {
-    if(this->sun != NULL) {
-        delete this->sun;
-    }
-    this->sun = new DirectionalLight(sunPos, Vector3f(1, 1, 0.8));
-    return this->sun;
+LightPtr ImageMaker::makeSun(const Vector3f &sunPos) {
+    return LightPtr( new DirectionalLight(sunPos, Vector3f(1., 1., 1.)) );
 }
 
-SceneParser* ImageMaker::readyScene(Light *sun, const ObjPtr building) {
-    if(completeScene != NULL) {
-        delete completeScene;
+SceneParser* ImageMaker::readyScene(LightPtr sun, const GroupPtr building) {
+    if(this->completeScene != NULL) {
+        delete this->completeScene;
     }
-    completeScene = new SceneParser(*this->baseScene);
-    completeScene->addLight(sun);
-    completeScene->addObject(building);
+    this->completeScene = new SceneParser(*this->baseScene);
+    this->completeScene->addLight(sun);
+    this->completeScene->addObject(building);
     return completeScene;
 }
 
-void ImageMaker::makeImage(SceneParser *const scene, int resolution, char *fileName) {
+void ImageMaker::makeImage(SceneParser *const scene, int resolution, const char *filename) {
 
-    Group *group = scene->getGroup();
+    GroupPtr group = scene->getGroup();
     Camera *camera = scene->getCamera();
     Image image(resolution, resolution);
     Vector3f pixelColor;
@@ -56,26 +47,28 @@ void ImageMaker::makeImage(SceneParser *const scene, int resolution, char *fileN
     int i;
     int j;
 
-    // iterate over the pixels in the scene, saving each to the image.
-    for (i = 0; i < resolution; i++) {
+    if (group) {
+        // iterate over the pixels in the scene, saving each to the image.
+        for (i = 0; i < resolution; i++) {
 
-        x = (float)i/resolution;
+            x = (float)i/resolution;
 
-        for (j = 0; j < resolution; j++) {
-            y = (float)j/resolution;
-            Ray ray = camera->generateRay(Vector2f(x, y));
-            Hit* hit = new Hit();
-            bool intersection = group->intersect(ray, *hit, camera->getTMin());
+            for (j = 0; j < resolution; j++) {
+                y = (float)j/resolution;
+                Ray ray = camera->generateRay(Vector2f(x, y));
+                Hit* hit = new Hit();
+                bool intersection = group->intersect(ray, *hit, camera->getTMin());
 
-            pixelColor = this->getPixelColor(intersection, hit, ray, scene);
+                pixelColor = this->getPixelColor(intersection, hit, ray, scene);
 
-            image.SetPixel(i, j, pixelColor);
-            delete hit;
+                image.SetPixel(i, j, pixelColor);
+                delete hit;
+            }
         }
-    }
 
-    // save the image
-    image.SaveImage(fileName);
+        // save the image
+        image.SaveImage(filename);
+    }
 }
 
 Vector3f ImageMaker::getPixelColor(bool intersection, Hit *hit, Ray ray, SceneParser *const scene) {
@@ -93,7 +86,7 @@ Vector3f ImageMaker::getPixelColor(bool intersection, Hit *hit, Ray ray, ScenePa
             Vector3f dir;
             Vector3f col;
             float distToLight;
-            Light* light = scene->getLight(i);
+            LightPtr light = scene->getLight(i);
             light->getIllumination(p, dir, col, distToLight);
             Vector3f addition = mat->Shade(ray, *hit, dir, col);
             shading += addition;

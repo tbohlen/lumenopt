@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <vecmath.h>
+#include <stdio.h>
 
 #include "Ray.h"
 #include "Hit.h"

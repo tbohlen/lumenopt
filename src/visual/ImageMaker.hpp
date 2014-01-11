@@ -43,11 +43,11 @@ class ImageMaker {
          * Arguments:
          * sunPos - position of the sun in the sky
          * building - group of Object3Ds defining the building. Must be an
-         * ObjPtr to comply with Group implementation.
+         * GroupPtr to comply with Group implementation.
          * resolution - the size of the image to produce
-         * fileName - where to save the image
+         * filename - where to save the image
          */
-        void makeImageOfScene(const Vector3f &sunPos, const ObjPtr building, int resolution, char *fileName);
+        void makeImageOfScene(Vector3f &sunPos, const GroupPtr building, int resolution, const char *filename);
     private:
 
         /*
@@ -80,7 +80,7 @@ class ImageMaker {
          *
          * Returns the conglomerate scene.
          */
-        SceneParser* readyScene(Light *sun, ObjPtr building);
+        SceneParser* readyScene(LightPtr sun, GroupPtr building);
 
         /*
          * Method: makeSun
@@ -88,15 +88,12 @@ class ImageMaker {
          * Creates a new directional light at the position provided. Represents
          * the sun in the model.
          *
-         * The memory for this directional light is stored in-object and handled
-         * by the object.
-         *
          * Arguments: 
          * sunPos - the position from which the sun should be shining
          *
          * Returns the sun representation.
          */
-        Light* makeSun(const Vector3f &sunPos);
+        LightPtr makeSun(const Vector3f &sunPos);
 
         /*
          * Method: makeImage
@@ -107,11 +104,10 @@ class ImageMaker {
          * Arguments:
          * scene
          * resolution - a square, resolution x resolution image is produced
-         * fileName
+         * filename
          */
-        void makeImage(SceneParser *const scene, int resolution, char* fileName);
+        void makeImage(SceneParser *const scene, int resolution, const char* filename);
 
-        Light *sun;
         SceneParser *baseScene;
         SceneParser *completeScene;
 };

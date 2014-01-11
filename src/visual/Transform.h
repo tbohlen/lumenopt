@@ -10,7 +10,7 @@ class Transform: public Object3D
 {
     public:
         Transform(){}
-        Transform( const Matrix4f& m, Object3D* obj ):o(obj){
+        Transform( const Matrix4f& m, ObjPtr obj ):o(obj){
             o = obj;
             transform = m;
         }
@@ -39,7 +39,7 @@ class Transform: public Object3D
         }
 
     protected:
-        Object3D* o; //un-transformed object	
+        ObjPtr o; //un-transformed object
         Matrix4f transform;
 };
 

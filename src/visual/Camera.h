@@ -16,6 +16,7 @@ class Camera
         virtual Ray generateRay( const Vector2f& point ) = 0 ;
         virtual float getTMin() const = 0 ;
         virtual ~Camera(){}
+        virtual Camera* clone() const = 0;
     protected:
         Vector3f center;
         Vector3f direction;
@@ -58,6 +59,10 @@ class PerspectiveCamera: public Camera
 
         virtual float getTMin() const {
             return 0.0f;
+        }
+
+        virtual Camera* clone() const {
+            return new PerspectiveCamera(*this);
         }
 
     private:

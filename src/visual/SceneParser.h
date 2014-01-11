@@ -15,6 +15,7 @@
 #include "Plane.h"
 #include "Triangle.h"
 #include "Transform.h"
+#include "types.h"
 
 /*
 class Camera;
@@ -52,7 +53,7 @@ public:
         return ambient_light;
     }
 
-    vector<Light*> getLights() const {
+    vector<LightPtr> getLights() const {
         return this->lights;
     }
 
@@ -61,7 +62,7 @@ public:
         return this->lights.size();
     }
 
-    Light* getLight( int i ) const
+    LightPtr getLight( int i ) const
     {
         assert( i >= 0 && i < lights.size() );
         return lights[i];
@@ -78,12 +79,12 @@ public:
         return materials[i];
     }
 
-    Group* getGroup() const
+    GroupPtr getGroup() const
     {
         return group;
     }
 
-    void addLight(Light *light);
+    void addLight(const LightPtr light);
 
     void addObject(const ObjPtr object);
 
@@ -98,18 +99,18 @@ private:
     void parsePerspectiveCamera();
     void parseBackground();
     void parseLights();
-    Light* parseDirectionalLight();
-	Light* parsePointLight();
+    LightPtr parseDirectionalLight();
+	LightPtr parsePointLight();
     void parseMaterials();
     Material* parseMaterial();
 
-    Object3D* parseObject( char token[ MAX_PARSER_TOKEN_LENGTH ] );
-    Group* parseGroup();
-    Sphere* parseSphere();
-    Plane* parsePlane();
-    Triangle* parseTriangle();
-    Mesh* parseTriangleMesh();
-    Transform* parseTransform();
+    ObjPtr parseObject( char token[ MAX_PARSER_TOKEN_LENGTH ] );
+    GroupPtr parseGroup();
+    ObjPtr parseSphere();
+    ObjPtr parsePlane();
+    ObjPtr parseTriangle();
+    ObjPtr parseTriangleMesh();
+    ObjPtr parseTransform();
 
     int getToken( char token[ MAX_PARSER_TOKEN_LENGTH ] );
     Vector3f readVector3f();
@@ -121,11 +122,11 @@ private:
     Camera* camera;
     Vector3f background_color;
     Vector3f ambient_light;
-    std::vector<Light*> lights;
+    std::vector<LightPtr> lights;
     int num_materials;
     Material** materials;
     Material* current_material;
-    Group* group;
+    GroupPtr group;
 };
 
 #endif // SCENE_PARSER_H
