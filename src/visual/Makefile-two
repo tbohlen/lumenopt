@@ -3,7 +3,7 @@ INCFLAGS += -I ../vecmath/include
 INCFLAGS += -I/usr/local/include
 INCFLAGS += -I /usr/include/GL
 
-LINKFLAGS = -L. -framework GLUT -framework OpenGL -framework Cocoa
+LINKFLAGS = -L. -lRK4 -framework GLUT -framework OpenGL -framework Cocoa
 CC = g++
 CFLAGS = -g -Wall -ansi -arch x86_64
 SRCS = $(wildcard *.cpp)
