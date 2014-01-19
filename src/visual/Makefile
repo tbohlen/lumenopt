@@ -1,5 +1,5 @@
 # for shared types file
-INCFLAGS = -I ..
+INCFLAGS = -I ../include
 # for vecmath
 INCFLAGS += -I ../vecmath/include
 # for boost
