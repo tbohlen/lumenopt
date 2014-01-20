@@ -25,7 +25,7 @@ bool Mesh::intersect( const Ray& r , Hit& h , float tmin ) {
   return result;
 }
 
-Mesh::Mesh(const char * filename,Material * material):Object3D(material)
+Mesh::Mesh(const char * filename,boost::shared_ptr<Material> material):Object3D(material)
 {
   std::ifstream f ;
   f.open(filename);

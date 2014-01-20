@@ -16,14 +16,14 @@ class Triangle: public Object3D
 public:
 	Triangle();
         ///@param a b c are three vertex positions of the triangle
-	Triangle( const Vector3f& a, const Vector3f& b, const Vector3f& c, Material* m):Object3D(m){
+	Triangle( const Vector3f& a, const Vector3f& b, const Vector3f& c, boost::shared_ptr<Material> m):Object3D(m){
           hasTex = false;
           this->a = a;
           this->b = b;
           this->c = c;
 	}
 
-	Triangle( const Vector3f& a, const Vector3f& b, const Vector3f& c, Material* m, Vector3f *normals):Object3D(m){
+	Triangle( const Vector3f& a, const Vector3f& b, const Vector3f& c, boost::shared_ptr<Material> m, Vector3f *normals):Object3D(m){
           hasTex = false;
           this->a = a;
           this->b = b;

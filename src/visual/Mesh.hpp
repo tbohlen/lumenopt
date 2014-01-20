@@ -15,7 +15,7 @@ struct Trig{
 
 class Mesh:public Object3D{
 public:
-  Mesh(const char * filename, Material* m);
+  Mesh(const char * filename, boost::shared_ptr<Material> m);
   std::vector<Vector3f>v;
   std::vector<Trig>t;
   std::vector<Vector3f>n;

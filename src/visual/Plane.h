@@ -11,7 +11,7 @@ class Plane: public Object3D
 {
 public:
 	Plane(){}
-	Plane( const Vector3f& normal , float d , Material* m):Object3D(m){
+	Plane( const Vector3f& normal , float d , boost::shared_ptr<Material> m):Object3D(m){
         this->normal = normal;
         this->distance = d;
 	}

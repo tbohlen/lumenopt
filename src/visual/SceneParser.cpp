@@ -23,9 +23,6 @@ SceneParser::SceneParser(const char* filename) {
     camera = NULL;
     background_color = Vector3f(0.5,0.5,0.5);
     ambient_light = Vector3f(0,0,0);
-    num_materials = 0;
-    materials = NULL;
-    current_material = NULL;
 
     // parse the file
     assert(filename != NULL);
@@ -41,8 +38,10 @@ SceneParser::SceneParser(const char* filename) {
 		printf("cannot open scene file\n");
 		exit(0);
 	}
+    cout << "Parsing file..." << endl;
     parseFile();
     fclose(file);
+    cout << "File closed... " << endl;
     file = NULL;
 
     // if no lights are specified, set ambient light to white
@@ -54,35 +53,18 @@ SceneParser::SceneParser(const char* filename) {
 }
 
 SceneParser::SceneParser(const SceneParser& sceneParser) {
-
-    int i;
-
     group = sceneParser.getGroup();
     camera = sceneParser.getCamera()->clone();
     background_color = sceneParser.getBackgroundColor();
     ambient_light = sceneParser.getAmbientLight();
 
     lights = sceneParser.getLights();
-
-    num_materials = sceneParser.getNumMaterials();
-
-    materials = new Material*[num_materials];
-
-    for (i = 0; i < num_materials; i++) {
-        materials[i] = new Material( *sceneParser.getMaterial(i) );
-    }
-
-    // only used in parsing. If copied, we are not parsing so this is irrelevant
-    current_material = NULL;
+    materials = sceneParser.getMaterials();
 }
 
 SceneParser::~SceneParser() {
     if (camera != NULL)
         delete camera;
-    int i;
-    for (i = 0; i < num_materials; i++) {
-        delete materials[i]; }
-    delete [] materials;
 }
 
 // ====================================================================
@@ -106,21 +88,28 @@ void SceneParser::parseFile() {
     //
     char token[MAX_PARSER_TOKEN_LENGTH];
     while (getToken(token)) {
+        cout << "Next Loop" << endl;
         if (!strcmp(token, "PerspectiveCamera")) {
+            cout << "Parsing camera" << endl;
             parsePerspectiveCamera();
         } else if (!strcmp(token, "Background")) {
+            cout << "Parsing background" << endl;
             parseBackground();
         } else if (!strcmp(token, "Lights")) {
+            cout << "Parsing lights" << endl;
             parseLights();
         } else if (!strcmp(token, "Materials")) {
+            cout << "Parsing materials" << endl;
             parseMaterials();
         } else if (!strcmp(token, "Group")) {
+            cout << "Parsing group" << endl;
             group = parseGroup();
         } else {
             printf ("Unknown token in parseFile: '%s'\n", token);
             exit(0);
         }
     }
+    cout << "done" << endl;
 }
 
 // ====================================================================
@@ -220,34 +209,34 @@ void SceneParser::parseMaterials() {
     getToken(token); assert (!strcmp(token, "{"));
     // read in the number of objects
     getToken(token); assert (!strcmp(token, "numMaterials"));
-    num_materials = readInt();
-    materials = new Material*[num_materials];
+    int num_materials = readInt();
+    materials.resize(num_materials);
     // read in the objects
     int count = 0;
     while (num_materials > count) {
-        getToken(token); 
-        if (!strcmp(token, "Material") ||
-                !strcmp(token, "PhongMaterial")) {
+        getToken(token);
+        if (!strcmp(token, "Material") || !strcmp(token, "PhongMaterial")) {
             materials[count] = parseMaterial();
         } else {
-            printf ("Unknown token in parseMaterial: '%s'\n", token); 
+            printf ("Unknown token in parseMaterial: '%s'\n", token);
             exit(0);
         }
         count++;
     }
     getToken(token); assert (!strcmp(token, "}"));
-}    
+}
 
 
-Material* SceneParser::parseMaterial() {
+boost::shared_ptr<Material> SceneParser::parseMaterial() {
     char token[MAX_PARSER_TOKEN_LENGTH];
 	char filename[MAX_PARSER_TOKEN_LENGTH];
 	filename[0] = 0;
-    Vector3f diffuseColor(1,1,1), specularColor(0,0,0);
-	float shininess=0;
+    Vector3f diffuseColor(1,1,1);
+    Vector3f specularColor(0,0,0);
+	float shininess = 0;
     getToken(token); assert (!strcmp(token, "{"));
     while (1) {
-        getToken(token); 
+        getToken(token);
         if (strcmp(token, "diffuseColor")==0) {
             diffuseColor = readVector3f();
         }
@@ -265,10 +254,13 @@ Material* SceneParser::parseMaterial() {
             break;
         }
     }
-    Material *answer = new Material(diffuseColor, specularColor, shininess);
+    cout << "Making material" << endl;
+    boost::shared_ptr<Material> answer( new Material(diffuseColor, specularColor, shininess) );
+    cout << "Made material" << endl;
 	if(filename[0] !=0){
 		answer->loadTexture(filename);
 	}
+    cout << "returning" << endl;
     return answer;
 }
 
@@ -353,7 +345,7 @@ ObjPtr SceneParser::parseSphere() {
     getToken(token); assert (!strcmp(token, "radius"));
     float radius = readFloat();
     getToken(token); assert (!strcmp(token, "}"));
-    assert (current_material != NULL);
+    assert (current_material);
     return ObjPtr( new Sphere(center,radius,current_material) );
 }
 
@@ -366,7 +358,7 @@ ObjPtr SceneParser::parsePlane() {
     getToken(token); assert (!strcmp(token, "offset"));
     float offset = readFloat();
     getToken(token); assert (!strcmp(token, "}"));
-    assert (current_material != NULL);
+    assert (current_material);
     return ObjPtr( new Plane(normal,offset,current_material) );
 }
 
@@ -384,7 +376,7 @@ ObjPtr SceneParser::parseTriangle() {
     assert (!strcmp(token, "vertex2"));
     Vector3f v2 = readVector3f();
     getToken(token); assert (!strcmp(token, "}"));
-    assert (current_material != NULL);
+    assert (current_material);
     return ObjPtr( new Triangle(v0,v1,v2,current_material) );
 }
 

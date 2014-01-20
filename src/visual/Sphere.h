@@ -18,10 +18,9 @@ public:
         center = Vector3f(0.0, 0.0, 0.0);
 	}
 
-	Sphere( Vector3f center , float radius , Material* material ):Object3D(material){
+	Sphere( Vector3f center , float radius , boost::shared_ptr<Material> material ) : Object3D(material) {
         this->radius = radius;
         this->center = center;
-        this->material = material;
 	}
 
 	~Sphere(){

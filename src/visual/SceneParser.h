@@ -70,12 +70,16 @@ public:
 
     int getNumMaterials() const
     {
-        return num_materials;
+        return this->materials.size();
     }
 
-    Material* getMaterial( int i ) const
+    vector < boost::shared_ptr < Material > > getMaterials() const {
+        return this->materials;
+    }
+
+    boost::shared_ptr<Material> getMaterial( int i ) const
     {
-        assert( i >= 0 && i < num_materials );
+        assert( i >= 0 && i < materials.size() );
         return materials[i];
     }
 
@@ -102,7 +106,7 @@ private:
     LightPtr parseDirectionalLight();
 	LightPtr parsePointLight();
     void parseMaterials();
-    Material* parseMaterial();
+    boost::shared_ptr<Material> parseMaterial();
 
     ObjPtr parseObject( char token[ MAX_PARSER_TOKEN_LENGTH ] );
     GroupPtr parseGroup();
@@ -123,9 +127,8 @@ private:
     Vector3f background_color;
     Vector3f ambient_light;
     std::vector<LightPtr> lights;
-    int num_materials;
-    Material** materials;
-    Material* current_material;
+    std::vector< boost::shared_ptr< Material > > materials;
+    boost::shared_ptr<Material> current_material;
     GroupPtr group;
 };
 

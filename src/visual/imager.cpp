@@ -40,7 +40,8 @@ int main( int argc, char* argv[]) {
 
     // parse the background scene
     cout << "Creating scene parser..." << endl;
-    SceneParser *sceneParser = new SceneParser("scenes/scene-building.txt");
+    SceneParser *sceneParser = new SceneParser("scene-building.txt");
+    cout << "Done creating parser..." << endl;
 
     // save it
     Vector3f sunPos(0, 0.5, 1);
