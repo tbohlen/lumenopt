@@ -30,11 +30,11 @@ pair<ObjPtr, ObjPtr> BuildingParser::buildRectangle(int x, int y, int z) {
     pair<ObjPtr, ObjPtr> rectangle;
 
     // find the four corners
-    float left = x * this->xSize;
-    float right = (x + 1) * this->xSize;
-    float height = y * this->ySize;
-    float back = z * this->zSize;
-    float front = (z + 1) * this->zSize;
+    float back = x * this->xSize;
+    float front = (x + 1) * this->xSize;
+    float height = z * this->zSize;
+    float left = y * this->ySize;
+    float right = (y + 1) * this->ySize;
 
     Vector3f bottomLeft(left, height, front);
     Vector3f topLeft(left, height, back);
