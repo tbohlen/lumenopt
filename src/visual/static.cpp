@@ -32,7 +32,7 @@ int main( int argc, char* argv[]) {
     cout << "Creating building parser..." << endl;
 
     // parse it
-    BuildingParser *bldgParser = new BuildingParser(building, 3., 3., 3.);
+    BuildingParser *bldgParser = new BuildingParser(building, 1., 1., 1.);
 
     cout << "Getting building group..." << endl;
 

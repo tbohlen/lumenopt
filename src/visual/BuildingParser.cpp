@@ -12,12 +12,6 @@ BuildingParser::BuildingParser
     (vector<vector<vector<bool> > > plan, float xSize, float ySize, float zSize)
     : plan(plan), xSize(xSize), ySize(ySize), zSize(zSize) {
     // determine the size of the divisions on each axis
-    this->xDivs = this->plan.size();
-    this->yDivs = (xDivs == 0) ? 0 : this->plan[0].size();
-    this->zDivs = (yDivs == 0) ? 0 : this->plan[0][0].size();
-    this->xDivSize = this->xSize/this->plan.size();
-    this->yDivSize = this->ySize/this->plan[0].size();
-    this->zDivSize = this->zSize/this->plan[0][0].size();
     Vector3f color(1., 1., 1.);
     this->material = new Material(color);
 }
@@ -36,11 +30,11 @@ pair<ObjPtr, ObjPtr> BuildingParser::buildRectangle(int x, int y, int z) {
     pair<ObjPtr, ObjPtr> rectangle;
 
     // find the four corners
-    float left = x * this->xDivSize;
-    float right = (x + 1) * this->xDivSize;
-    float height = y * this->yDivSize;
-    float back = z * this->zDivSize;
-    float front = (z + 1) * this->zDivSize;
+    float left = x * this->xSize;
+    float right = (x + 1) * this->xSize;
+    float height = y * this->ySize;
+    float back = z * this->zSize;
+    float front = (z + 1) * this->zSize;
 
     Vector3f bottomLeft(left, height, front);
     Vector3f topLeft(left, height, back);
@@ -75,9 +69,9 @@ void BuildingParser::buildGroup() {
     // guess a starting size
     this->group = GroupPtr( new Group( ceil( plan.size()/3 ) ) );
 
-    for (i = 0; i < this->xDivs; i++) {
-        for (j = 0; j < this->yDivs; j++) {
-            for (k = 0; k < this->zDivs; k++) {
+    for (i = 0; i < plan.size(); i++) {
+        for (j = 0; j < plan[i].size(); j++) {
+            for (k = 0; k < plan[i][j].size(); k++) {
                 if (plan[i][j][k]) {
                     // if this piece of floor exists, then build it
                     pair<ObjPtr, ObjPtr> rectangle = this->buildRectangle(i, j, k);

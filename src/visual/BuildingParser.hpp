@@ -19,16 +19,17 @@ class BuildingParser {
     public:
         /*
          * Constructor: BuildingParser
-         *
-         * The plan should be a flattened matrix in the following order:
-         * (0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0), (0, 0, 1), (1, 0, 1), ...
+         * The building parser object interprets the 3-dimensional building
+         * vector to allow for visualizing the building. the x y and z sizes are
+         * the sizes of the individual divisions in the x, y, and z directions
+         * respectively.
          *
          * Arguments:
          * plan - a vector containing true and false vlues indicating where a
          * floor exists
-         * xDivs - the number of divisions along the x axis
-         * yDivs - the number of divisions along the y axis
-         * zDivs - the number of divisions along the z axis
+         * xSize - the number of divisions along the x axis
+         * ySize - the number of divisions along the y axis
+         * zSize - the number of divisions along the z axis
          */
         BuildingParser(std::vector<std::vector<std::vector<bool> > > plan, float xSize, float ySize, float zSize);
 
@@ -48,15 +49,9 @@ class BuildingParser {
 
     private:
         std::vector<std::vector<std::vector<bool> > > plan;
-        int xDivs;
-        int yDivs;
-        int zDivs;
         float xSize;
         float ySize;
         float zSize;
-        float xDivSize;
-        float yDivSize;
-        float zDivSize;
         Material *material;
         GroupPtr group;
 

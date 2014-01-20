@@ -42,7 +42,7 @@ OBJS = $(SRCS:.cpp=.o)
 # Recipes
 ###############################################################################
 
-all: $(ALL_SRCS) $(INTER_PROG) $(STATIC_PROG)
+all: $(OBJS) $(INTER_PROG) $(STATIC_PROG)
 
 # builds the interactive visualizer
 $(INTER_PROG): $(OBJS) $(INTER_OBJ)
