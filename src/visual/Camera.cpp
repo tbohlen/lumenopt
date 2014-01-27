@@ -1,6 +1,5 @@
-#include "Camera.h"
-#include "Ray.h"
-#include <vecmath.h>
+#include "Camera.hpp"
+#include "Ray.hpp"
 #include <cmath>
 #include <iostream>
 

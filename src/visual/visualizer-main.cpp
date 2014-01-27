@@ -13,7 +13,7 @@
 #endif
 
 #include <vecmath.h>
-#include "GLcamera.h"
+#include "GLcamera.hpp"
 #include "Visualizer.hpp"
 
 using namespace std;

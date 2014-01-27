@@ -1,12 +1,9 @@
 #ifndef OBJECT3D_H
 #define OBJECT3D_H
 
-#include "Ray.h"
-#include "Hit.h"
-#include "Material.h"
-#include <iostream>
-
-using namespace std;
+#include "Ray.hpp"
+#include "Hit.hpp"
+#include "Material.hpp"
 
 class Object3D
 {

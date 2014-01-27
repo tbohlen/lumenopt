@@ -1,10 +1,10 @@
 #include "BuildingParser.hpp"
-#include <math.h>
-#include "Group.h"
-#include "Material.h"
-#include "Object3D.h"
+#include "Group.hpp"
+#include "Material.hpp"
+#include "Object3D.hpp"
+#include "Triangle.hpp"
 #include "vecmath.h"
-#include "Triangle.h"
+#include <math.h>
 
 using namespace std;
 

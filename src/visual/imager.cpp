@@ -1,8 +1,8 @@
 #include "BuildingParser.hpp"
 #include "ImageMaker.hpp"
-#include "SceneParser.h"
-#include "Group.h"
-#include "types.h"
+#include "SceneParser.hpp"
+#include "Group.hpp"
+#include "types.hpp"
 #include <stdio.h>
 
 using namespace std;

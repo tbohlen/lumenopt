@@ -1,7 +1,7 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef BUILDINGPARSER_H
+#define BUILDINGPARSER_H
 #include <vector>
-#include "types.h"
+#include "types.hpp"
 
 class Material;
 

@@ -1,8 +1,10 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <vecmath.h>
+#include <cassert>
 
-#include "Image.h"
+#include "Image.hpp"
 
 // some helper functions for save & load
 
@@ -23,18 +25,66 @@ void WriteByte( FILE* file, unsigned char b )
 unsigned char ClampColorComponent( float c )
 {
     int tmp = int( c * 255 );
-    
+
     if( tmp < 0 )
     {
         tmp = 0;
     }
-    
+
     if( tmp > 255 )
     {
         tmp = 255;
     }
 
     return ( unsigned char )tmp;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Image Class Implementation
+////////////////////////////////////////////////////////////////////////////////
+
+Image::Image( int w, int h )
+{
+    width = w;
+    height = h;
+    data = new Vector3f[ width * height ];
+}
+
+Image::~Image()
+{
+    delete[] data;
+}
+
+int Image::Width() const
+{
+    return width;
+}
+
+int Image::Height() const
+{
+    return height;
+}
+
+const Vector3f& Image::GetPixel( int x, int y ) const
+{
+    assert( x >= 0 && x < width );
+    assert( y >= 0 && y < height );
+    return data[ y * width + x ];
+}
+
+void Image::SetAllPixels( const Vector3f& color )
+{
+    for( int i = 0; i < width * height; ++i )
+    {
+        data[i] = color;
+    }
+}
+
+void Image::SetPixel(int x, int y, const Vector3f& color)
+{
+    assert( x >= 0 && x < width );
+    assert( y >= 0 && y < height );
+    data[ y * width + x ] = color;
 }
 
 // Save and Load data type 2 Targa (.tga) files
@@ -150,15 +200,15 @@ Image* Image::LoadPPM(const char *filename) {
     FILE *file = fopen(filename,"rb");
     // misc header information
     int width = 0;
-    int height = 0;  
+    int height = 0;
     char tmp[100];
-    fgets(tmp,100,file); 
+    fgets(tmp,100,file);
     assert (strstr(tmp,"P6"));
-    fgets(tmp,100,file); 
+    fgets(tmp,100,file);
     assert (tmp[0] == '#');
-    fgets(tmp,100,file); 
+    fgets(tmp,100,file);
     sscanf(tmp,"%d %d",&width,&height);
-    fgets(tmp,100,file); 
+    fgets(tmp,100,file);
     assert (strstr(tmp,"255"));
     // the data
     Image *answer = new Image(width,height);
@@ -266,12 +316,12 @@ Image::SaveBMP(const char *filename)
     bmph.biSizeImage = bytesPerLine * height;
     bmph.biXPelsPerMeter = 0;
     bmph.biYPelsPerMeter = 0;
-    bmph.biClrUsed = 0;       
-    bmph.biClrImportant = 0; 
+    bmph.biClrUsed = 0;
+    bmph.biClrImportant = 0;
 
     file = fopen (filename, "wb");
     if (file == NULL) return(0);
-  
+
     fwrite(&bmph.bfType, 2, 1, file);
     fwrite(&bmph.bfSize, 4, 1, file);
     fwrite(&bmph.bfReserved, 4, 1, file);
@@ -287,7 +337,7 @@ Image::SaveBMP(const char *filename)
     fwrite(&bmph.biYPelsPerMeter, 4, 1, file);
     fwrite(&bmph.biClrUsed, 4, 1, file);
     fwrite(&bmph.biClrImportant, 4, 1, file);
-  
+
     line = (unsigned char *)malloc(bytesPerLine);
     if (line == NULL)
     {

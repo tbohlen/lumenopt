@@ -1,11 +1,10 @@
 #ifndef SCENE_PARSER_H
 #define SCENE_PARSER_H
 
-#include "types.h"
+#include "types.hpp"
 #include <vector>
 #include <vecmath.h>
-#include "Light.h"
-#include "Material.h"
+#include "Material.hpp"
 
 class Camera;
 class Object3D;
@@ -14,8 +13,7 @@ class Sphere;
 class Plane;
 class Triangle;
 class Transform;
-class Vector2f;
-class Vector3f;
+class Light;
 
 #define MAX_PARSER_TOKEN_LENGTH 100
 

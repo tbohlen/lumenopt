@@ -20,4 +20,5 @@ class Visualizer {
         float yDivSize;
         float zDivSize;
 };
+
 #endif

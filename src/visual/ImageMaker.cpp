@@ -1,12 +1,13 @@
-#include "imageMaker.hpp"
-#include "Image.h"
+#include "ImageMaker.hpp"
+#include "Image.hpp"
+#include "Hit.hpp"
+#include "Ray.hpp"
+#include "Group.hpp"
+#include "SceneParser.hpp"
+#include "Light.hpp"
+#include "Camera.hpp"
 #include <string.h>
-#include "hit.h"
-#include "Ray.h"
-#include "Group.h"
-#include "SceneParser.h"
-#include "Light.h"
-#include "Camera.h"
+#include "Vector3f.h"
 
 using namespace std;
 

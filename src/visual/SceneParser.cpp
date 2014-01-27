@@ -4,16 +4,17 @@
 #include <cmath>
 #include <cassert>
 
-#include "SceneParser.h"
-#include "Camera.h"
+#include "SceneParser.hpp"
+#include "Camera.hpp"
 
-#include "Object3D.h"
-#include "Group.h"
-#include "Sphere.h"
-#include "Plane.h"
-#include "Triangle.h"
-#include "Transform.h"
+#include "Object3D.hpp"
+#include "Group.hpp"
+#include "Sphere.hpp"
+#include "Plane.hpp"
+#include "Triangle.hpp"
+#include "Transform.hpp"
 #include "Mesh.hpp"
+#include "Light.hpp"
 
 #define DegreesToRadians(x) ((M_PI * x) / 180.0f)
 

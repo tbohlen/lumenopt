@@ -1,5 +1,4 @@
 #include "Visualizer.hpp"
-#include <vector>
 #include <assert.h>
 #include "vecmath.h"
 

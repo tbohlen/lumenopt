@@ -1,13 +1,13 @@
 #ifndef IMAGEMAKER_H
 #define IMAGEMAKER_H
 
-#include "types.h"
-#include "Vector3f.h"
+#include "types.hpp"
 
 // forward declarations
 class SceneParser;
 class Hit;
 class Ray;
+class Vector3f;
 
 /*
  * Class ImageMaker
