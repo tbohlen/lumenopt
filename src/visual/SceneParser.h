@@ -1,33 +1,22 @@
 #ifndef SCENE_PARSER_H
 #define SCENE_PARSER_H
 
-#include <cassert>
+#include "types.h"
+#include <vector>
 #include <vecmath.h>
-
-#include "SceneParser.h"
-#include "Camera.h"
 #include "Light.h"
 #include "Material.h"
-#include "Object3D.h"
-#include "Mesh.hpp"
-#include "Group.h"
-#include "Sphere.h"
-#include "Plane.h"
-#include "Triangle.h"
-#include "Transform.h"
-#include "types.h"
 
-/*
 class Camera;
-class Light;
-class Material;
 class Object3D;
 class Group;
 class Sphere;
 class Plane;
 class Triangle;
 class Transform;
-*/
+class Vector2f;
+class Vector3f;
+
 #define MAX_PARSER_TOKEN_LENGTH 100
 
 class SceneParser
@@ -53,7 +42,7 @@ public:
         return ambient_light;
     }
 
-    vector<LightPtr> getLights() const {
+    std::vector<LightPtr> getLights() const {
         return this->lights;
     }
 
@@ -70,17 +59,13 @@ public:
 
     int getNumMaterials() const
     {
-        return this->materials.size();
+        return this->num_materials;
     }
 
-    vector < boost::shared_ptr < Material > > getMaterials() const {
-        return this->materials;
-    }
-
-    boost::shared_ptr<Material> getMaterial( int i ) const
+    Material* getMaterial( int i ) const
     {
-        assert( i >= 0 && i < materials.size() );
-        return materials[i];
+        assert( i >= 0 && i < this->num_materials );
+        return &materials[i];
     }
 
     GroupPtr getGroup() const
@@ -106,7 +91,7 @@ private:
     LightPtr parseDirectionalLight();
 	LightPtr parsePointLight();
     void parseMaterials();
-    boost::shared_ptr<Material> parseMaterial();
+    Material* parseMaterial();
 
     ObjPtr parseObject( char token[ MAX_PARSER_TOKEN_LENGTH ] );
     GroupPtr parseGroup();
@@ -127,8 +112,9 @@ private:
     Vector3f background_color;
     Vector3f ambient_light;
     std::vector<LightPtr> lights;
-    std::vector< boost::shared_ptr< Material > > materials;
-    boost::shared_ptr<Material> current_material;
+    Material* materials;
+    int num_materials;
+    Material* current_material;
     GroupPtr group;
 };
 

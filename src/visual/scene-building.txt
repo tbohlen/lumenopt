@@ -23,4 +23,3 @@ Group {
         offset -2
     }
 }
-

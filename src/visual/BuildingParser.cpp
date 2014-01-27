@@ -85,5 +85,5 @@ void BuildingParser::buildGroup() {
 }
 
 BuildingParser::~BuildingParser() {
-    delete this->material;
+
 }

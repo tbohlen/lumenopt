@@ -6,6 +6,7 @@ class Group;
 class Light;
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 typedef struct {
     int x;

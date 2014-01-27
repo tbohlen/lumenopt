@@ -27,7 +27,7 @@ class Transform: public Object3D
             bool retVal = o->intersect( transformedRay , h , tmin);
             if (retVal) {
                 float t = h.getT();
-                boost::shared_ptr<Material> mat = h.getMaterial();
+                Material* mat = h.getMaterial();
                 Vector3f normal = h.getNormal();
                 Matrix4f normalTransform = inverse.transposed();
                 Vector4f normal4 = Vector4f(normal, 0.0);

@@ -36,12 +36,11 @@ int main( int argc, char* argv[]) {
 
     cout << "Getting building group..." << endl;
 
-    GroupPtr buildingGroup = bldgParser->getGroup();
+    ObjPtr buildingGroup = bldgParser->getGroup();
 
     // parse the background scene
     cout << "Creating scene parser..." << endl;
     SceneParser *sceneParser = new SceneParser("scene-building.txt");
-    cout << "Done creating parser..." << endl;
 
     // save it
     Vector3f sunPos(0, 0.5, 1);

@@ -1,11 +1,13 @@
 #ifndef IMAGEMAKER_H
 #define IMAGEMAKER_H
 
-#include "Vector3f.h"
-#include "Light.h"
-#include "Camera.h"
-#include "SceneParser.h"
 #include "types.h"
+#include "Vector3f.h"
+
+// forward declarations
+class SceneParser;
+class Hit;
+class Ray;
 
 /*
  * Class ImageMaker
@@ -43,11 +45,11 @@ class ImageMaker {
          * Arguments:
          * sunPos - position of the sun in the sky
          * building - group of Object3Ds defining the building. Must be an
-         * GroupPtr to comply with Group implementation.
+         * ObjPtr to comply with Group implementation.
          * resolution - the size of the image to produce
          * filename - where to save the image
          */
-        void makeImageOfScene(Vector3f &sunPos, const GroupPtr building, int resolution, const char *filename);
+        void makeImageOfScene(Vector3f &sunPos, const ObjPtr building, int resolution, const char *filename);
     private:
 
         /*
@@ -80,7 +82,7 @@ class ImageMaker {
          *
          * Returns the conglomerate scene.
          */
-        SceneParser* readyScene(LightPtr sun, GroupPtr building);
+        SceneParser* readyScene(LightPtr sun, ObjPtr building);
 
         /*
          * Method: makeSun

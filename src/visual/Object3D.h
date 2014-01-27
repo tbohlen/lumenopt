@@ -18,7 +18,7 @@ class Object3D
         virtual ~Object3D(){
         }
 
-        Object3D( boost::shared_ptr<Material> material){
+        Object3D( Material* material){
             this->material = material ;
         }
 
@@ -27,7 +27,7 @@ class Object3D
         char* type;
     protected:
 
-        boost::shared_ptr<Material> material;
+        Material* material;
 };
 
 #endif

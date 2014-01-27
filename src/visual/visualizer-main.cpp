@@ -23,7 +23,7 @@ namespace
 {
 
     // This is the camera
-    Camera camera;
+    GLCamera camera;
 
     // The object that shows the building
     Visualizer *visualizer;
@@ -124,13 +124,13 @@ namespace
             switch (button)
             {
                 case GLUT_LEFT_BUTTON:
-                    camera.MouseClick(Camera::LEFT, x, y);
+                    camera.MouseClick(GLCamera::LEFT, x, y);
                     break;
                 case GLUT_MIDDLE_BUTTON:
-                    camera.MouseClick(Camera::MIDDLE, x, y);
+                    camera.MouseClick(GLCamera::MIDDLE, x, y);
                     break;
                 case GLUT_RIGHT_BUTTON:
-                    camera.MouseClick(Camera::RIGHT, x,y);
+                    camera.MouseClick(GLCamera::RIGHT, x,y);
                 default:
                     break;
             }

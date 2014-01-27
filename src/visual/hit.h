@@ -4,7 +4,6 @@
 #include <vecmath.h>
 #include "Ray.h"
 #include <float.h>
-#include "boost/shared_ptr.hpp"
 
 class Material;
 
@@ -19,7 +18,7 @@ public:
 		hasTex=false;
     }
 
-    Hit( float _t, boost::shared_ptr<Material> m, const Vector3f& n )
+    Hit( float _t, Material* m, const Vector3f& n )
     {
         t = _t;
         material = m;
@@ -46,7 +45,7 @@ public:
         return t;
     }
 
-    boost::shared_ptr<Material> getMaterial() const
+    Material* getMaterial() const
     {
         return material;
     }
@@ -56,7 +55,7 @@ public:
         return normal;
     }
 
-    void set( float _t, boost::shared_ptr<Material> m, const Vector3f& n )
+    void set( float _t, Material* m, const Vector3f& n )
     {
         t = _t;
         material = m;
@@ -70,7 +69,7 @@ public:
 	Vector2f texCoord;
 private:
 	float t;
-    boost::shared_ptr<Material> material;
+    Material* material;
     Vector3f normal;
 
 };

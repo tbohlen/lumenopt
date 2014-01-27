@@ -2,6 +2,11 @@
 #include "Image.h"
 #include <string.h>
 #include "hit.h"
+#include "Ray.h"
+#include "Group.h"
+#include "SceneParser.h"
+#include "Light.h"
+#include "Camera.h"
 
 using namespace std;
 
@@ -15,7 +20,7 @@ ImageMaker::~ImageMaker() {
     }
 }
 
-void ImageMaker::makeImageOfScene(Vector3f &sunPos, const GroupPtr building, int resolution, const char *filename) {
+void ImageMaker::makeImageOfScene(Vector3f &sunPos, const ObjPtr building, int resolution, const char *filename) {
     sunPos.negate();
     LightPtr sun = this->makeSun(sunPos);
     SceneParser *scene = this->readyScene(sun, building);
@@ -26,7 +31,7 @@ LightPtr ImageMaker::makeSun(const Vector3f &sunPos) {
     return LightPtr( new DirectionalLight(sunPos, Vector3f(1., 1., 1.)) );
 }
 
-SceneParser* ImageMaker::readyScene(LightPtr sun, const GroupPtr building) {
+SceneParser* ImageMaker::readyScene(LightPtr sun, const ObjPtr building) {
     if(this->completeScene != NULL) {
         delete this->completeScene;
     }
@@ -74,7 +79,7 @@ void ImageMaker::makeImage(SceneParser *const scene, int resolution, const char 
 Vector3f ImageMaker::getPixelColor(bool intersection, Hit *hit, Ray ray, SceneParser *const scene) {
     if (intersection) {
         int i;
-        Material *mat = hit->getMaterial();
+        Material* mat = hit->getMaterial();
         Vector3f p = ray.pointAtParameter(hit->getT());
         Vector3f shading;
 

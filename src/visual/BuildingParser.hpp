@@ -52,7 +52,7 @@ class BuildingParser {
         float xSize;
         float ySize;
         float zSize;
-        Material *material;
+        Material* material;
         GroupPtr group;
 
         /*

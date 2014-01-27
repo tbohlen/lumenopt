@@ -3,8 +3,8 @@
 // Extended to handle translation (MIDDLE) and scale (RIGHT)
 
 // -*-c++-*-
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef GLCAMERA_H
+#define GLCAMERA_H
 
 #ifdef WIN32
 #include <windows.h>
@@ -12,18 +12,18 @@
 
 #include <vecmath.h>
 
-class Camera
+class GLCamera
 {
 public:
 
-    Camera();
-    
+    GLCamera();
+
     typedef enum { NONE, LEFT, MIDDLE, RIGHT } Button;
 
     // You must call all of the Set*() functions before you use this!
     // I didn't put it into the constructor because it's inconvenient
     // to initialize stuff in my opengl application.
-    
+
     void SetDimensions(int w, int h);
     void SetViewport(int x, int y, int w, int h);
     void SetPerspective(float fovy);
@@ -36,7 +36,7 @@ public:
     // Apply viewport, perspective, and modeling
     // use these instead of 
     void ApplyViewport() const;
-    
+
 	Matrix4f projectionMatrix() const;
 	Matrix4f viewMatrix() const;
 
@@ -49,7 +49,7 @@ public:
     Vector3f GetCenter() const { return mCurrentCenter; }
     Matrix4f GetRotation() const { return mCurrentRot; }
     float GetDistance() const { return mCurrentDistance; }
-    
+
 private:
 
     // States 
