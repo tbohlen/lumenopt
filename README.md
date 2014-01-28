@@ -23,11 +23,8 @@ Currently, only the visualizers are functional. To test them:
 
 ###TODO list
 
-* Create a sampler
 * Create the sun model
-* Create the building model
 * Create the Heuristic evaluator
-* Save out models for visualization
 * Implement full ray tracing for the optimizer
 * Implement the use of various materials in the optimizer
 * Add shadow mapping to the visualizer and imager
