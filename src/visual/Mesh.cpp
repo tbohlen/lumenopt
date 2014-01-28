@@ -1,7 +1,7 @@
 #include "Mesh.hpp"
 
-#include "Vector2f.h"
-#include "Vector3f.h"
+#include "vecmath/Vector2f.h"
+#include "vecmath/Vector3f.h"
 #include "Triangle.hpp"
 #include <fstream>
 #include <iostream>

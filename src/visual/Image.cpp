@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
-#include <vecmath.h>
+#include "vecmath/vecmath.h"
 #include <cassert>
 
 #include "Image.hpp"

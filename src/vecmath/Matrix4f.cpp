@@ -1,15 +1,15 @@
-#include "Matrix4f.h"
+#include "vecmath/Matrix4f.h"
 
 #include <cassert>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
 
-#include "Matrix2f.h"
-#include "Matrix3f.h"
-#include "Quat4f.h"
-#include "Vector3f.h"
-#include "Vector4f.h"
+#include "vecmath/Matrix2f.h"
+#include "vecmath/Matrix3f.h"
+#include "vecmath/Quat4f.h"
+#include "vecmath/Vector3f.h"
+#include "vecmath/Vector4f.h"
 
 Matrix4f::Matrix4f( float fill )
 {

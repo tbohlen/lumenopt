@@ -1,4 +1,4 @@
-#include "Group.hpp"
+#include "visual/Group.hpp"
 #include "Object3D.hpp"
 #include "Ray.hpp"
 #include "Hit.hpp"

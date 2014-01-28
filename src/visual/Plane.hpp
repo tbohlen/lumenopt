@@ -2,7 +2,7 @@
 #define PLANE_H
 
 #include "Object3D.hpp"
-#include <vecmath.h>
+#include "vecmath/vecmath.h"
 
 class Plane: public Object3D
 {

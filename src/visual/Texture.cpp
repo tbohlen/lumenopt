@@ -1,6 +1,6 @@
 #include "Texture.hpp"
 #include "bitmap_image.hpp"
-#include "Vector3f.h"
+#include "vecmath/Vector3f.h"
 
 Texture::~Texture() {
     if(bimg!=0){

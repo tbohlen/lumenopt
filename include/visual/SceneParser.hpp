@@ -3,7 +3,7 @@
 
 #include "types.hpp"
 #include <vector>
-#include <vecmath.h>
+#include "vecmath/vecmath.h"
 #include "Material.hpp"
 
 class Camera;

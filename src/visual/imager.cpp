@@ -1,7 +1,7 @@
-#include "BuildingParser.hpp"
-#include "ImageMaker.hpp"
-#include "SceneParser.hpp"
-#include "Group.hpp"
+#include "visual/BuildingParser.hpp"
+#include "visual/ImageMaker.hpp"
+#include "visual/SceneParser.hpp"
+#include "visual/Group.hpp"
 #include "types.hpp"
 #include <stdio.h>
 

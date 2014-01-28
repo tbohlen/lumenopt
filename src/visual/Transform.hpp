@@ -1,7 +1,7 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-#include <vecmath.h>
+#include "vecmath/vecmath.h"
 #include "Object3D.hpp"
 #include "types.hpp"
 

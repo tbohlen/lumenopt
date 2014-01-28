@@ -1,7 +1,7 @@
 #ifndef HIT_H
 #define HIT_H
 
-#include <vecmath.h>
+#include "vecmath/vecmath.h"
 #include <iostream>
 
 class Material;

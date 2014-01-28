@@ -2,7 +2,7 @@
 #define SPHERE_H
 
 #include "Object3D.hpp"
-#include <vecmath.h>
+#include "vecmath/vecmath.h"
 
 class Sphere: public Object3D
 {

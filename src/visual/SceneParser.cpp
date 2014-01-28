@@ -4,11 +4,11 @@
 #include <cmath>
 #include <cassert>
 
-#include "SceneParser.hpp"
-#include "Camera.hpp"
+#include "visual/SceneParser.hpp"
 
+#include "Camera.hpp"
 #include "Object3D.hpp"
-#include "Group.hpp"
+#include "visual/Group.hpp"
 #include "Sphere.hpp"
 #include "Plane.hpp"
 #include "Triangle.hpp"

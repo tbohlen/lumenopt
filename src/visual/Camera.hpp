@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <vecmath.h>
+#include "vecmath/vecmath.h"
 
 class Ray;
 

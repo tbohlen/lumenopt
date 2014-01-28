@@ -1,4 +1,4 @@
-#include "GLcamera.hpp"
+#include "visual/GLcamera.hpp"
 
 #include <iostream>
 

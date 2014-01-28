@@ -2,7 +2,7 @@
 #define TRIANGLE_H
 
 #include "Object3D.hpp"
-#include <vecmath.h>
+#include "vecmath/vecmath.h"
 
 class Triangle: public Object3D {
     public:

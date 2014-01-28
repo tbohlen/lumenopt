@@ -1,7 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <vecmath.h>
+#include "vecmath/vecmath.h"
 #include "Texture.hpp"
 
 class Hit;

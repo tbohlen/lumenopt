@@ -1,6 +1,6 @@
-#include "Visualizer.hpp"
+#include "visual/Visualizer.hpp"
 #include <assert.h>
-#include "vecmath.h"
+#include "vecmath/vecmath.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>

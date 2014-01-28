@@ -3,7 +3,7 @@
 
 #include <cassert>
 #include <iostream>
-#include <Vector3f.h>
+#include "vecmath/Vector3f.h"
 
 using namespace std;
 

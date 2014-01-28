@@ -2,9 +2,9 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "Vector4f.h"
-#include "Vector2f.h"
-#include "Vector3f.h"
+#include "vecmath/Vector4f.h"
+#include "vecmath/Vector2f.h"
+#include "vecmath/Vector3f.h"
 
 Vector4f::Vector4f( float f )
 {

@@ -12,9 +12,9 @@
 #include <GL/glut.h>
 #endif
 
-#include <vecmath.h>
-#include "GLcamera.hpp"
-#include "Visualizer.hpp"
+#include "vecmath/vecmath.h"
+#include "visual/GLcamera.hpp"
+#include "visual/Visualizer.hpp"
 
 using namespace std;
 
