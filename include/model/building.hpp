@@ -1,7 +1,7 @@
 #ifndef BUILDING_H
 #define BUILDING_H
 
-#include "types.h"
+#include "types.hpp"
 #include <iostream>
 
 #define MAX_PARSER_TOKEN_LENGTH 100
@@ -18,6 +18,8 @@ class Building {
 		/*
 		 * Constructor: Building
 		 */
+        Building();
+
 		Building(boolMatrix exists, float xSize, float ySize, float zSize);
 
 		~Building();
@@ -40,33 +42,40 @@ class Building {
 		bool inShade(indices const panel, coord const sundir) const;
 
         /*
-         * Method: getSize
+         * Method: getDimension
          *
          * Returns the size of the top-level dimension of the boolMatrix.
          */
-        int getSize();
+        int getDimension() const;
 
         /*
-         * Method: getSecondSize
+         * Method: getSecondDimension
          *
          * Returns the size of the ith row of the exists matrix.
          */
-        int getSecondSize(int i);
+        int getSecondDimension(int i) const;
 
         /*
-         * Method: getThirdSize
+         * Method: getThirdDimension
          *
          * Returns the size of the jth column of the ith row of the exists
          * matrix.
          */
-        int getThirdSize(int i, int j);
+        int getThirdDimension(int i, int j) const;
 
         /*
          * Method: floorExists
          *
          * Returns true if there is a floor panel at i, j, k and false if not.
          */
-        bool floorExists(int i, int j, int k);
+        bool floorExists(int i, int j, int k) const;
+
+        float getXSize() const;
+        float getYSize() const;
+        float getZSize() const;
+
+        friend std::istream& operator>> (std::istream& is, Building& b);
+        friend std::ostream& operator<< (std::ostream& os, Building& b);
 
 	private:
 		boolMatrix exists;
@@ -76,21 +85,5 @@ class Building {
 		coordMatrix centroids;
 
 };
-
-/*
- * Operator: <<
- * 
- * Redefines the << operator for this class so that we can easily print this to
- * a file.
- */
-std::ostream& operator << (std::ostream& os, const Building& b);
-
-/*
- * Operator: >>
- * 
- * Redefines the >> operator for this class so that we can easily load this
- * object from a stream.
- */
-std::istream& operator >> (std::istream& os, const Building& b);
 
 #endif

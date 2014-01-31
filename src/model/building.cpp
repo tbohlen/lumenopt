@@ -1,10 +1,13 @@
-#include "building.hpp"
+#include "model/building.hpp"
 #include "math.h"
-#include "types.h"
-#include <cassert>
+#include "helpers.hpp"
 #include <string>
 
 using namespace std;
+
+Building::Building() {
+
+}
 
 Building::Building(boolMatrix exists, float xSize, float ySize, float zSize) {
 	this->exists = exists;
@@ -30,21 +33,21 @@ Building::Building(boolMatrix exists, float xSize, float ySize, float zSize) {
 
 Building::~Building() {}
 
-bool Building::checkIntersect(indices const panel, coord const sundir) const {
+bool Building::inShade(indices const panel, coord const sundir) const {
 	bool shade = 0; //panel is in sun
-	Nz = this->exists[panel.x][panel.y].size();
-	c = centroids[panel.x][panel.y][panel.z];
-	dz = zSize;
-	t = -dz/sundir.z;
+	int Nz = this->exists[panel.x][panel.y].size();
+	coord c = centroids[panel.x][panel.y][panel.z];
+	float dz = zSize;
+	float t = -dz/sundir.z;
 	for (int i=panel.z+1; i<Nz; i++) {
 		//find intersection point on next possible level (px,py,pz)
-		px = c.x - sundir.x*t;
-		py = c.y - sundir.y*t;
-		pz = c.z + dz;
+		float px = c.x - sundir.x*t;
+		float py = c.y - sundir.y*t;
+		float pz = c.z + dz;
 		//find indices of panel associated with intersection point
-		pxind = floor(px/(this->xSize));
-		pyind = floor(py/(this->ySize));
-		pzind = floor(pz/(this->zSize));
+		int pxind = (int) floor(px/(this->xSize));
+		int pyind = (int) floor(py/(this->ySize));
+		int pzind = (int) floor(pz/(this->zSize));
 		//check if panel exists at this location
 		if (this->exists[pxind][pyind][pzind] == 1) {
 			shade = 1;
@@ -54,90 +57,114 @@ bool Building::checkIntersect(indices const panel, coord const sundir) const {
 	return shade;
 }
 
-int Building::getSize() {
+////////////////////////////////////////////////////////////////////////////////
+// Getters
+////////////////////////////////////////////////////////////////////////////////
+
+int Building::getDimension() const {
     return this->exists.size();
 }
-int Building::getSecondSize(int i) {
-    assert(i < this->exists.size());
+int Building::getSecondDimension(int i) const {
+    myAssert(i >= 0);
+    myAssert(i < this->exists.size());
     return this->exists[i].size();
 }
 
-int Building::getThirdSize(int i, int j) {
-    assert(i < this->exists.size());
-    assert(j < this->exists[i].size());
+int Building::getThirdDimension(int i, int j) const {
+    myAssert(i >= 0);
+    myAssert(i < this->exists.size());
+    myAssert(j >= 0);
+    myAssert(j < this->exists[i].size());
     return this->exists[i][j].size();
 }
 
-bool Building::floorExists(int i, int j, int k) {
-    assert(i >= 0);
-    assert(i < this->exists.size());
-    assert(j >= 0);
-    assert(j < this->exists[i].size());
-    assert(k >= 0);
-    assert(k < this->exists[i][j].size());
+bool Building::floorExists(int i, int j, int k) const {
+    myAssert(i >= 0);
+    myAssert(i < this->exists.size());
+    myAssert(j >= 0);
+    myAssert(j < this->exists[i].size());
+    myAssert(k >= 0);
+    myAssert(k < this->exists[i][j].size());
     return this->exists[i][j][k];
+}
+
+float Building::getXSize() const {
+    return this->xSize;
+}
+float Building::getYSize() const {
+    return this->ySize;
+}
+float Building::getZSize() const {
+    return this->zSize;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Operator overloading
 ////////////////////////////////////////////////////////////////////////////////
 
-ostream& operator << (ostream& os, const Building& b) {
+ostream& operator<< (ostream& os, Building& b) {
     // save the first size
     int i, j, k;
-    int size = b.getSize();
+    int size = b.getDimension();
     os << "Size: " << size << endl;
     for (i = 0; i < size; i++) {
-        int secondSize = b.getSecondSize(i);
-        os << "nextX: " << secondSize << end;
-        for (j = 0; j < secondSize; j++) {
-            int thirdSize = b.getThirdSize(i, j);
-            os << "nextY: " << thirdSize << endl;
-            for (k = 0; k < thirdSize; k++) {
-                os << "panel: " << b.exists(i, j, k) << endl;
+        int secondDimension = b.getSecondDimension(i);
+        os << "nextX: " << secondDimension << endl;
+        for (j = 0; j < secondDimension; j++) {
+            int thirdDimension = b.getThirdDimension(i, j);
+            os << "nextY: " << thirdDimension << endl;
+            for (k = 0; k < thirdDimension; k++) {
+                os << "panel: " << b.floorExists(i, j, k) << endl;
             }
         }
     }
     os << "end" << endl;
+    return os;
 }
 
-istream& operator >> (istream& os, const Building& b) {
+istream& operator>> (istream& is, Building& b) {
     int i = -1;
     int j = -1;
     int k = -1;
 
     string str;
-    os >> str;
-    assert(str.compare("Size:") == 0);
+    is >> str;
+    myAssert(str.compare("Size:") == 0);
 
     int size;
-    os >> size;
+    is >> size;
     b.exists.resize(size);
-    while (os >> str) {
+    while (is >> str) {
         // read through each word
         if (str.compare("panel:") == 0) {
             // load the next panel
             k++;
-            os >> b.exists[i][j][k];
+            bool ex;
+            is >> ex;
+            b.exists[i][j][k] = ex;
         }
         else if (str.compare("nextX:") == 0) {
             // load the size of the next x array
             i++;
-            int xSize;
-            os >> xSize;
-            b.exists[i].resize(size);
+            j = -1;
+            k = -1;
+            int ySize;
+            is >> ySize;
+            b.exists[i].resize(ySize);
         }
         else if (str.compare("nextY:") == 0) {
             // load the size of the next y array
             j++;
-            int ySize;
-            os >> ySize;
-            b.exists[i][j].resize(ySize);
+            k = -1;
+            int zSize;
+            is >> zSize;
+            b.exists[i][j].resize(zSize);
         }
         else if (str.compare("end") == 0) {
             // exit
             break;
         }
     }
+    return is;
 }
 

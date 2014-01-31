@@ -3,6 +3,8 @@
 
 #include "types.hpp"
 
+class Building;
+
 class Sampler {
     public:
         /*
@@ -13,21 +15,21 @@ class Sampler {
          * this template building.
          *
          * Parameters:
-         * bldgTemplate - the template building object
+         * templateBldg - the template building object
          */
-        Sampler(boolMatrix bldgTemplate);
+        Sampler(Building *templateBldg);
 
         /*
          * Method: generateSample
          *
-         * Generates a random building based off the bldgTemplate. Each floor
+         * Generates a random building based off the templateBldg. Each floor
          * tile exists with 50% probability.
          *
          * Returns a boolMatrix describing the building.
          */
         boolMatrix generateSample();
     private:
-        boolMatrix bldgTemplate;
+        Building *templateBldg;
 };
 
 #endif
