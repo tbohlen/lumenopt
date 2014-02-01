@@ -82,8 +82,8 @@ class Building {
 		float xSize;
 		float ySize;
 		float zSize;
+        int maxZ;
 		coordMatrix centroids;
-
 };
 
 #endif

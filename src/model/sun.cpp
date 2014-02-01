@@ -17,6 +17,7 @@ Sun::~Sun() {
 }
 
 void Sun::build(int n) {
+    assert(n > 0);
     directions.resize(n);
     int i;
     for (i = 0; i < n; i++) {

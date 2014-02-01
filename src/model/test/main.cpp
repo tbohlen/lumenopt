@@ -1,11 +1,17 @@
 #include "model/building.hpp"
+#include "model/sun.hpp"
+#include "helpers.hpp"
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <math.h>
+#include "types.hpp"
 
 #define XSIZE 1.0
 #define YSIZE 2.0
 #define ZSIZE 0.5
+#define EPSILON 0.000001
+#define PI 3.14159265
 
 // Test set for the model
 
@@ -70,13 +76,48 @@ int main(int argc, char *argv[]) {
     tests++;
     if (bldg->floorExists(0, 0, 0) != true || bldg->floorExists(0, 1, 1) != false || bldg->floorExists(0, 0, 2) != true || bldg->floorExists(0, 1, 0) != true) {
         testsFailed++;
-        cout << "\033[31mFAIL:\033[0m floorExists returned wrong value for (0, 0, 0)." << endl;
+        cout << "\033[31mFAIL:\033[0m floorExists returned wrong value." << endl;
     }
     else {
         cout << "\033[32mOK:\033[0m   Building::floorExists works." << endl;
     }
 
     // test inShade
+    // TODO: Test additional points
+    // TODO: Test out-of-bounds assertions
+    tests++;
+    indices p1; // bottom left. lit on diagonal
+    p1.x = 0;
+    p1.y = 0;
+    p1.z = 0;
+    indices p2; //  top left. Lit straight down
+    p2.x = 0;
+    p2.y = 0;
+    p2.z = 2;
+    coord dir1; // straight down
+    dir1.x = 0;
+    dir1.y = 0;
+    dir1.z = -1;
+    coord dir2; // diagonal
+    dir2.x = 0;
+    dir2.y = -1;
+    dir2.z = -0.5;
+    bool answerOne = bldg->inShade(p1, dir1); // should be false
+    bool answerTwo = bldg->inShade(p1, dir2); // should be true
+    bool answerThree = bldg->inShade(p2, dir1); // should be true
+    bool answerFour = bldg->inShade(p2, dir2); // should be false
+    if (!answerOne || answerTwo || answerThree || !answerFour) {
+        testsFailed++;
+        cout << "\033[31mFAIL:\033[0m Building::inShade returned wrong value" << endl;
+        //cout << "One: " << answerOne << endl;
+        //cout << "Two: " << answerTwo << endl;
+        //cout << "Three: " << answerThree << endl;
+        //cout << "Four: " << answerFour << endl;
+    }
+    else {
+        cout << "\033[32mOK:\033[0m   Building::floorExists works." << endl;
+    }
+
 
     // test x, y, and z sizes
     tests++;
@@ -106,7 +147,7 @@ int main(int argc, char *argv[]) {
         cout << "\033[32mOK:\033[0m   Building::getZSize functions works." << endl;
     }
 
-    // test centroids
+    // TODO: test centroids
 
     // test saving
     stringstream ss;
@@ -134,7 +175,53 @@ int main(int argc, char *argv[]) {
     delete bldg;
     delete secondBldg;
 
-    cout << endl << tests << " tests run, " << testsFailed << " tests failed." << endl;
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Sun
+    ////////////////////////////////////////////////////////////////////////////
+
+    Sun *sun = new Sun(10, 10);
+    // make sure that the directions are close. Our values should be normalized, so
+    // that means values will be less than 1. EPSILON defined at top of file
+    float y0 = -1 * cos(0);
+    float z0 = -1 * sin(0);
+    float y1 = -1 * cos(PI/9);
+    float z1 = -1 * sin(PI/9);
+    float y7 = -1 * cos((7*PI)/9);
+    float z7 = -1 * sin((7*PI)/9);
+
+    tests++;
+    int num = sun->getNumberOfSamples();
+    if(num != 10) {
+        testsFailed++;
+        cout << "\033[31mFAIL:\033[0m Sun created " << num << " samples instead of 10." << endl;
+    }
+    else {
+        cout << "\033[32mOK:\033[0m   Sun construction works." << endl;
+    }
+
+    tests++;
+    coord zero = sun->getDirectionForIndex(0);
+    coord one = sun->getDirectionForIndex(1);
+    coord seven = sun->getDirectionForIndex(7);
+    if (!compFloat(zero.x, 0.0, EPSILON) || !compFloat(zero.y, y0, EPSILON) ||
+        !compFloat(zero.z, z0, EPSILON) || !compFloat(one.x, 0.0, EPSILON) ||
+        !compFloat(one.y, y1, EPSILON) || !compFloat(one.z, z1, EPSILON) ||
+        !compFloat(seven.x, 0.0, EPSILON) || !compFloat(seven.y, y7, EPSILON) ||
+        !compFloat(seven.z, z7, EPSILON)) {
+        testsFailed++;
+        cout << "\033[31mFAIL:\033[0m Sun getDirectionForIndex does not work." << endl;
+        cout << "Calc'd zero: " << "(" << zero.x << ", " << zero.y << ", " << zero.z << ")" << endl;
+        cout << "Correct zero: " << "(" << 0.0 << ", " << y0 << ", " << z0 << ")" << endl;
+        cout << "Calc'd one: " << "(" << one.x << ", " << one.y << ", " << one.z << ")" << endl;
+        cout << "Correct one: " << "(" << 0.0 << ", " << y1 << ", " << z1 << ")" << endl;
+        cout << "Calc'd seven: " << "(" << seven.x << ", " << seven.y << ", " << seven.z << ")" << endl;
+        cout << "Correct seven: " << "(" << 0.0 << ", " << y7 << ", " << z7 << ")" << endl;
+    }
+    else {
+        cout << "\033[32mOK:\033[0m   Sun::getDirectionForIndex works." << endl;
+    }
+
+    cout << endl << tests << " tests run, " << testsFailed << " tests failed." << endl;
 }
 

@@ -2,6 +2,7 @@
 #include "math.h"
 #include "helpers.hpp"
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -14,45 +15,48 @@ Building::Building(boolMatrix exists, float xSize, float ySize, float zSize) {
 	this->xSize = xSize; // size in m of each x unit
 	this->ySize = ySize; // size in m of each y unit
 	this->zSize = zSize; // size in m of each z unit
+    this->maxZ = 0;
 
-	coordMatrix centroids (exists.size());
+	centroids.resize(exists.size());
 	for (int i=0; i<exists.size(); i++) {
 		centroids[i].resize(exists[i].size());
 		for (int j=0; j<exists[i].size(); j++) {
-			centroids[i][j].resize(exists[i][j].size());
+            int zDim = exists[i][j].size();
+            if (zDim > this->maxZ) { this->maxZ = zDim; }
+			centroids[i][j].resize(zDim);
 			for (int k=0; k<exists[i][j].size(); k++) {
 				centroids[i][j][k].x = (float(i) + 0.5)*xSize;
 				centroids[i][j][k].y = (float(j) + 0.5)*ySize;
 				centroids[i][j][k].z = float(k)*zSize;
-
 			}
 		}
 	}
-
 }
 
 Building::~Building() {}
 
 bool Building::inShade(indices const panel, coord const sundir) const {
 	bool shade = 0; //panel is in sun
-	int Nz = this->exists[panel.x][panel.y].size();
-	coord c = centroids[panel.x][panel.y][panel.z];
-	float dz = zSize;
-	float t = -dz/sundir.z;
-	for (int i=panel.z+1; i<Nz; i++) {
+    coord c = this->centroids[panel.x][panel.y][panel.z];
+    float dz = zSize;
+    float t = -dz/sundir.z;
+	for (int i=panel.z+1; i<this->maxZ; i++) {
 		//find intersection point on next possible level (px,py,pz)
-		float px = c.x - sundir.x*t;
-		float py = c.y - sundir.y*t;
-		float pz = c.z + dz;
+        float px = c.x - (i-panel.z) * sundir.x*t;
+        float py = c.y - (i-panel.z) * sundir.y*t;
+        float pz = c.z + (i-panel.z) * dz;
 		//find indices of panel associated with intersection point
-		int pxind = (int) floor(px/(this->xSize));
-		int pyind = (int) floor(py/(this->ySize));
-		int pzind = (int) floor(pz/(this->zSize));
+        int pxind = (int) floor(px/(this->xSize));
+        int pyind = (int) floor(py/(this->ySize));
+        int pzind = (int) floor(pz/(this->zSize));
 		//check if panel exists at this location
-		if (this->exists[pxind][pyind][pzind] == 1) {
-			shade = 1;
-			break;
-		}
+        if (pxind >= 0 && pxind < this->exists.size() && pyind >= 0 && pyind < this->exists[pxind].size() && pzind >= 0 && pzind < this->exists[pxind][pyind].size()) {
+            // make sure that this is a valid index before checking
+            if (this->exists[pxind][pyind][pzind] == 1) {
+                shade = 1;
+                break;
+            }
+        }
 	}
 	return shade;
 }

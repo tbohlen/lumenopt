@@ -8,11 +8,13 @@
 #include <cstdlib>
 #include "model/building.hpp"
 #include "model/sampler.hpp"
+#include "model/value.hpp"
+#include "model/sun.hpp"
 #include "types.hpp"
 
-#define DIM 10
-#define SECOND_DIM 4
-#define THIRD_DIM 15
+#define DIM 2
+#define SECOND_DIM 2
+#define THIRD_DIM 4
 #define XSIZE 1
 #define YSIZE 1
 #define ZSIZE 1
@@ -22,6 +24,7 @@ using namespace std;
 Building *temp;
 std::string templateFileName = "NO FILE NAME PROVIDED";
 int runs = 100;
+int suns = 12;
 
 void readArguments(int argc, char *argv[]) {
     int argNum;
@@ -33,13 +36,20 @@ void readArguments(int argc, char *argv[]) {
             // specifies a template file. The next argument is the name of the
             // template building.
             argNum++;
+            assert(argNum < argc);
             templateFileName = argv[argNum];
         }
         else if (strcmp(arg, "--runs") == 0 || strcmp(arg, "-r") == 0) {
             // specifies the number of runs of the monte carlo
             // The nest argument is the number
             argNum++;
+            assert(argNum < argc);
             runs = atoi(argv[argNum]);
+        }
+        else if (strcmp(arg "--suns") == 0 || strcmp(arg, "-s") == 0) {
+            argNum++;
+            assert(argNum < argc);
+            suns = atoi(argv[argNum]);
         }
     }
 }
@@ -75,6 +85,11 @@ int main( int argc, char *argv[]) {
         templateBuilding = new Building(example, XSIZE, YSIZE, ZSIZE);
     }
 
+    // build the sun model
+    Sun *sun = new Sun(45.5, suns);
+
+    // build to value function
+    Value *value = new Value();
 
     // build a sampler using that template
     Sampler *sampler = new Sampler(templateBuilding);
@@ -86,13 +101,16 @@ int main( int argc, char *argv[]) {
         boolMatrix exists = sampler->generateSample();
         Building *bldg = new Building(exists, XSIZE, YSIZE, ZSIZE);
         // test the building
-        float score = 0;
+        float score = value->getValue(bldg, sun);
 
         if (score > bestScore) {
             // if this building did better than the last, save it
             if (bestBuilding != NULL) { delete bestBuilding; }
             bestBuilding = bldg;
             bestScore = score;
+        }
+        else {
+            delete bldg;
         }
     }
 
@@ -103,6 +121,9 @@ int main( int argc, char *argv[]) {
 
     if (bestBuilding != NULL) { delete bestBuilding; }
     delete sampler;
+    delete sun;
+    delete templateBuilding;
+    delete value;
 
     return 0;
 }
