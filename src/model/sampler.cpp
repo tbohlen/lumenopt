@@ -1,6 +1,6 @@
 #include "model/sampler.hpp"
 #include "model/building.hpp"
-#include <random>
+#include <iostream>
 
 using namespace std;
 
@@ -8,14 +8,14 @@ Sampler::Sampler(Building *templateBldg) : templateBldg(templateBldg) {
 
 }
 
-boolMatrix Sampler::generateSample() {
+boolMatrix Sampler::generateSample(bernoulli_distribution &distribution, default_random_engine &generator) {
     int i;
     int j;
     int k;
     int iDimension = this->templateBldg->getDimension();
-    default_random_engine generator;
-    bernoulli_distribution distribution(0.5);
+
     boolMatrix sample(iDimension);
+
 	for (i = 0; i < iDimension; i++) {
         int jDimension = this->templateBldg->getSecondDimension(i);
         sample[i].resize(jDimension);

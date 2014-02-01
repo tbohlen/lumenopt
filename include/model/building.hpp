@@ -28,7 +28,8 @@ class Building {
 		 * Method: inShade
 		 *
 		 * Determines if ray from centroid to the sun hits another panel,
-		 * thereby putting it in shade.
+		 * thereby putting it in shade. If the panel requested does not exist,
+         * this returns 1.
 		 * 
 		 * Inputs:
 		 * 	panel - indices of the panel whose centroid we want
@@ -76,9 +77,9 @@ class Building {
 
         friend std::istream& operator>> (std::istream& is, Building& b);
         friend std::ostream& operator<< (std::ostream& os, Building& b);
+		boolMatrix exists;
 
 	private:
-		boolMatrix exists;
 		float xSize;
 		float ySize;
 		float zSize;

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string.h>
+#include <fstream>
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -15,6 +16,7 @@
 #include "vecmath/vecmath.h"
 #include "visual/GLcamera.hpp"
 #include "visual/Visualizer.hpp"
+#include "model/building.hpp"
 
 using namespace std;
 
@@ -56,8 +58,15 @@ namespace
             }
         }
 
+        Building *bldg = new Building();
+        string fName = "../model/best.bldg";
+        ifstream templateFile;
+        templateFile.open(fName);
+        templateFile >> *bldg;
+        templateFile.close();
+
         // build the visualizer
-        visualizer = new Visualizer(building, 3., 3., 3.);
+        visualizer = new Visualizer(bldg->exists, 1., 1., 1.);
     }
 
 

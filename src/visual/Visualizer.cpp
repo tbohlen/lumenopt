@@ -12,17 +12,6 @@
 using namespace std;
 
 Visualizer::Visualizer(vector<vector<vector<bool> > > building, float xSize, float ySize, float zSize) : building(building), xSize(xSize), ySize(ySize), zSize(zSize) {
-    assert(this->building.size() != 0);
-    assert(this->building[0].size() != 0);
-    assert(this->building[0][0].size() != 0);
-
-    this->xDivs = this->building.size();
-    this->yDivs = (xDivs == 0) ? 0 : this->building[0].size();
-    this->zDivs = (yDivs == 0) ? 0 : this->building[0][0].size();
-    this->xDivSize = this->xSize/this->xDivs;
-    this->yDivSize = this->ySize/this->yDivs;
-    this->zDivSize = this->zSize/this->zDivs;
-    Vector3f color(1., 1., 1.);
 }
 
 void Visualizer::draw() {
@@ -46,11 +35,11 @@ void Visualizer::draw() {
             for (k = 0; k < this->building[0][0].size(); k++) {
                 if (this->building[i][j][k]) {
                     // then build the triangle
-                    float left = i * this->xDivSize;
-                    float right = (i + 1) * this->xDivSize;
-                    float height = j * this->yDivSize;
-                    float back = k * this->zDivSize;
-                    float front = (k + 1) * this->zDivSize;
+                    float left = i * this->xSize;
+                    float right = (i + 1) * this->xSize;
+                    float height = j * this->ySize;
+                    float back = k * this->zSize;
+                    float front = (k + 1) * this->zSize;
 
                     Vector3f leftFront(left, height, front);
                     Vector3f leftBack(left, height, back);

@@ -29,7 +29,8 @@ class Value {
          * Method: calculateExposure
          *
          * Calculates the number of hours of exposer a given floor panel
-         * receives.
+         * receives. This number is the number of samples for which it is
+         * exposed to sun divided by the total number of sun samples taken.
          *
          * Parameters:
          * panelIndices - the indices of the floor panel

@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 
+#define EPSILON 0.000001
+
 using namespace std;
 
 Building::Building() {
@@ -36,6 +38,19 @@ Building::Building(boolMatrix exists, float xSize, float ySize, float zSize) {
 Building::~Building() {}
 
 bool Building::inShade(indices const panel, coord const sundir) const {
+
+    // make sure this panel exists
+    if (panel.x < 0 || panel.x >= this->exists.size() ||
+        panel.y < 0 || panel.y >= this->exists[panel.x].size() ||
+        panel.z < 0 || panel.z >= this->exists[panel.x][panel.y].size()) {
+        return 1;
+    }
+
+    // if the z component is 0 then the panel is light at an angle
+    if (sundir.z < EPSILON && sundir.z > -EPSILON) {
+        return 0; // not in shade if the sun is coming in horizontally
+    }
+
 	bool shade = 0; //panel is in sun
     coord c = this->centroids[panel.x][panel.y][panel.z];
     float dz = zSize;

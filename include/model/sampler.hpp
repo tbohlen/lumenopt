@@ -2,6 +2,7 @@
 #define SAMPLER_H
 
 #include "types.hpp"
+#include <random>
 
 class Building;
 
@@ -27,7 +28,7 @@ class Sampler {
          *
          * Returns a boolMatrix describing the building.
          */
-        boolMatrix generateSample();
+        boolMatrix generateSample(std::bernoulli_distribution &distribution, std::default_random_engine &generator);
     private:
         Building *templateBldg;
 };

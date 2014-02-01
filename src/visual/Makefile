@@ -30,6 +30,7 @@ CC = g++
 CFLAGS = -g -Wall -ansi -arch x86_64
 ALL_SRCS = $(wildcard *.cpp)
 ALL_SRCS += $(wildcard ../vecmath/*.cpp)
+ALL_SRCS += ../model/building.cpp
 
 # filter out the main files from the sources
 SRCS = $(filter-out $(VISUAL_MAIN) $(IMAGER_MAIN), $(ALL_SRCS))

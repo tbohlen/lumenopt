@@ -1,9 +1,13 @@
 #include "visual/BuildingParser.hpp"
+#include "model/building.hpp"
 #include "visual/ImageMaker.hpp"
 #include "visual/SceneParser.hpp"
 #include "visual/Group.hpp"
 #include "types.hpp"
 #include <stdio.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 int main( int argc, char* argv[]) {
@@ -29,10 +33,17 @@ int main( int argc, char* argv[]) {
         }
     }
 
+    Building *bldg = new Building();
+    string fName = "../model/best.bldg";
+    ifstream templateFile;
+    templateFile.open(fName);
+    templateFile >> *bldg;
+    templateFile.close();
+
     cout << "Creating building parser..." << endl;
 
     // parse it
-    BuildingParser *bldgParser = new BuildingParser(building, 1., 1., 1.);
+    BuildingParser *bldgParser = new BuildingParser(bldg->exists, 1., 1., 1.);
 
     cout << "Getting building group..." << endl;
 

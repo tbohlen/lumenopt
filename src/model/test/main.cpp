@@ -1,5 +1,6 @@
 #include "model/building.hpp"
 #include "model/sun.hpp"
+#include "model/value.hpp"
 #include "helpers.hpp"
 #include <string>
 #include <iostream>
@@ -14,6 +15,8 @@
 #define PI 3.14159265
 
 // Test set for the model
+
+// TODO: Add out-of-bounds tests
 
 using namespace std;
 
@@ -94,6 +97,10 @@ int main(int argc, char *argv[]) {
     p2.x = 0;
     p2.y = 0;
     p2.z = 2;
+    indices p3; // second up on right. Does not exist
+    p3.x = 0;
+    p3.y = 1;
+    p3.z = 1;
     coord dir1; // straight down
     dir1.x = 0;
     dir1.y = 0;
@@ -102,17 +109,24 @@ int main(int argc, char *argv[]) {
     dir2.x = 0;
     dir2.y = -1;
     dir2.z = -0.5;
-    bool answerOne = bldg->inShade(p1, dir1); // should be false
-    bool answerTwo = bldg->inShade(p1, dir2); // should be true
-    bool answerThree = bldg->inShade(p2, dir1); // should be true
-    bool answerFour = bldg->inShade(p2, dir2); // should be false
-    if (!answerOne || answerTwo || answerThree || !answerFour) {
+    coord dir3;
+    dir3.x = 0;
+    dir3.y = -1;
+    dir3.z = 0;
+    bool answerOne = bldg->inShade(p1, dir1); // should be true
+    bool answerTwo = bldg->inShade(p1, dir2); // should be false
+    bool answerThree = bldg->inShade(p2, dir1); // should be false
+    bool answerFour = bldg->inShade(p2, dir2); // should be true
+    bool answerFive = bldg->inShade(p1, dir3); // should be false
+    bool answerSix = bldg->inShade(p3, dir1); // should be true
+    if (!answerOne || answerTwo || answerThree || !answerFour || answerFive || !answerSix) {
         testsFailed++;
         cout << "\033[31mFAIL:\033[0m Building::inShade returned wrong value" << endl;
         //cout << "One: " << answerOne << endl;
         //cout << "Two: " << answerTwo << endl;
         //cout << "Three: " << answerThree << endl;
         //cout << "Four: " << answerFour << endl;
+        //cout << "Five: " << answerFive << endl;
     }
     else {
         cout << "\033[32mOK:\033[0m   Building::floorExists works." << endl;
@@ -211,16 +225,91 @@ int main(int argc, char *argv[]) {
         !compFloat(seven.z, z7, EPSILON)) {
         testsFailed++;
         cout << "\033[31mFAIL:\033[0m Sun getDirectionForIndex does not work." << endl;
-        cout << "Calc'd zero: " << "(" << zero.x << ", " << zero.y << ", " << zero.z << ")" << endl;
-        cout << "Correct zero: " << "(" << 0.0 << ", " << y0 << ", " << z0 << ")" << endl;
-        cout << "Calc'd one: " << "(" << one.x << ", " << one.y << ", " << one.z << ")" << endl;
-        cout << "Correct one: " << "(" << 0.0 << ", " << y1 << ", " << z1 << ")" << endl;
-        cout << "Calc'd seven: " << "(" << seven.x << ", " << seven.y << ", " << seven.z << ")" << endl;
-        cout << "Correct seven: " << "(" << 0.0 << ", " << y7 << ", " << z7 << ")" << endl;
+        //cout << "Calc'd zero: " << "(" << zero.x << ", " << zero.y << ", " << zero.z << ")" << endl;
+        //cout << "Correct zero: " << "(" << 0.0 << ", " << y0 << ", " << z0 << ")" << endl;
+        //cout << "Calc'd one: " << "(" << one.x << ", " << one.y << ", " << one.z << ")" << endl;
+        //cout << "Correct one: " << "(" << 0.0 << ", " << y1 << ", " << z1 << ")" << endl;
+        //cout << "Calc'd seven: " << "(" << seven.x << ", " << seven.y << ", " << seven.z << ")" << endl;
+        //cout << "Correct seven: " << "(" << 0.0 << ", " << y7 << ", " << z7 << ")" << endl;
     }
     else {
         cout << "\033[32mOK:\033[0m   Sun::getDirectionForIndex works." << endl;
     }
+
+    delete sun;
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Value
+    ////////////////////////////////////////////////////////////////////////////
+
+    boolMatrix smallMatrix(2);
+    smallMatrix[0].resize(2);
+    smallMatrix[1].resize(2);
+    smallMatrix[0][0].resize(2);
+    smallMatrix[0][1].resize(2);
+    smallMatrix[1][0].resize(2);
+    smallMatrix[1][1].resize(2);
+    smallMatrix[0][0][0] = 1;
+    smallMatrix[0][0][1] = 1;
+    smallMatrix[0][1][0] = 1;
+    smallMatrix[0][1][1] = 1;
+    smallMatrix[1][0][0] = 1;
+    smallMatrix[1][0][1] = 1;
+    smallMatrix[1][1][0] = 1;
+    smallMatrix[1][1][1] = 1;
+    Building *smallBldg = new Building(smallMatrix, 1, 1, 1);
+    Sun *secondSun = new Sun(10, 5);
+    Value *value = new Value();
+
+    // test the calculateExposure function
+    indices panelOne;
+    panelOne.x = 0;
+    panelOne.y = 0;
+    panelOne.z = 0;
+    indices panelTwo;
+    panelTwo.x = 1;
+    panelTwo.y = 1;
+    panelTwo.z = 0;
+    indices panelThree;
+    panelThree.x = 1;
+    panelThree.y = 1;
+    panelThree.z = 1;
+    float expOne = value->calculateExposure(panelOne, smallBldg, secondSun);
+    float expTwo = value->calculateExposure(panelTwo, smallBldg, secondSun);
+    float expThree = value->calculateExposure(panelThree, smallBldg, secondSun);
+
+    tests++;
+    if (!compFloat(expOne, 3.0/5.0, EPSILON) ||
+        !compFloat(expTwo, 3.0/5.0, EPSILON) ||
+        !compFloat(expThree, 1.0, EPSILON)) {
+        testsFailed++;
+        cout << "\033[31mFAIL:\033[0m Value::calculateExposure does not work." << endl;
+        //cout << expOne << " compared to " << 3.0/5.0 << endl;
+        //cout << expTwo << " compared to " << 3.0/5.0 << endl;
+        //cout << expThree << " compared to " << 1.0 << endl;
+    }
+    else {
+        cout << "\033[32mOK:\033[0m   Value::calculateExposure works." << endl;
+    }
+
+    // test the getValue function
+    float correctValue = 4.0 + ((3.0/5.0) * 4.0);
+    float measuredValue = value->getValue(smallBldg, secondSun);
+
+    tests++;
+    if (!compFloat(measuredValue, correctValue, EPSILON)) {
+        testsFailed++;
+        cout << "\033[31mFAIL:\033[0m Value::getValue does not work." << endl;
+        //cout << measuredValue << " compared to " << correctValue << endl;
+    }
+    else {
+        cout << "\033[32mOK:\033[0m   Value::getValue works." << endl;
+    }
+
+    // cleanup
+    delete smallBldg;
+    delete secondSun;
+    delete value;
 
     cout << endl << tests << " tests run, " << testsFailed << " tests failed." << endl;
 }
