@@ -24,6 +24,8 @@ class Building {
 
 		~Building();
 
+        void makeCentroids();
+
 		/*
 		 * Method: inShade
 		 *

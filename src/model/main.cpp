@@ -9,7 +9,7 @@
 #include <random>
 #include "model/building.hpp"
 #include "model/sampler.hpp"
-#include "model/value.hpp"
+#include "model/floorValue.hpp"
 #include "model/sun.hpp"
 #include "types.hpp"
 
@@ -99,7 +99,7 @@ int main( int argc, char *argv[]) {
 
     // build to value function
     cout << "Building value" << endl;
-    Value *value = new Value();
+    Value *value = new FloorValue();
 
     // build a sampler using that template
     cout << "Building sampler" << endl;
@@ -126,7 +126,7 @@ int main( int argc, char *argv[]) {
             bestScore = score;
         }
         else {
-            cout << "Sample " << i << " with score " << score << " is worse that previous best." << endl;
+            //cout << "Sample " << i << " with score " << score << " is worse that previous best." << endl;
             delete bldg;
         }
     }

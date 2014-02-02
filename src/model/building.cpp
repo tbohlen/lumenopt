@@ -9,7 +9,7 @@
 using namespace std;
 
 Building::Building() {
-
+    this->maxZ = 0;
 }
 
 Building::Building(boolMatrix exists, float xSize, float ySize, float zSize) {
@@ -19,26 +19,29 @@ Building::Building(boolMatrix exists, float xSize, float ySize, float zSize) {
 	this->zSize = zSize; // size in m of each z unit
     this->maxZ = 0;
 
-	centroids.resize(exists.size());
-	for (int i=0; i<exists.size(); i++) {
-		centroids[i].resize(exists[i].size());
-		for (int j=0; j<exists[i].size(); j++) {
-            int zDim = exists[i][j].size();
+    this->makeCentroids();
+}
+
+Building::~Building() {}
+
+void Building::makeCentroids() {
+	this->centroids.resize(exists.size());
+	for (int i=0; i<this->exists.size(); i++) {
+		this->centroids[i].resize(exists[i].size());
+		for (int j=0; j<this->exists[i].size(); j++) {
+            int zDim = this->exists[i][j].size();
             if (zDim > this->maxZ) { this->maxZ = zDim; }
-			centroids[i][j].resize(zDim);
-			for (int k=0; k<exists[i][j].size(); k++) {
-				centroids[i][j][k].x = (float(i) + 0.5)*xSize;
-				centroids[i][j][k].y = (float(j) + 0.5)*ySize;
-				centroids[i][j][k].z = float(k)*zSize;
+			this->centroids[i][j].resize(zDim);
+			for (int k=0; k<this->exists[i][j].size(); k++) {
+				this->centroids[i][j][k].x = (float(i) + 0.5)*this->xSize;
+				this->centroids[i][j][k].y = (float(j) + 0.5)*this->ySize;
+				this->centroids[i][j][k].z = float(k)*this->zSize;
 			}
 		}
 	}
 }
 
-Building::~Building() {}
-
 bool Building::inShade(indices const panel, coord const sundir) const {
-
     // make sure this panel exists
     if (panel.x < 0 || panel.x >= this->exists.size() ||
         panel.y < 0 || panel.y >= this->exists[panel.x].size() ||
@@ -54,19 +57,25 @@ bool Building::inShade(indices const panel, coord const sundir) const {
 	bool shade = 0; //panel is in sun
     coord c = this->centroids[panel.x][panel.y][panel.z];
     float dz = zSize;
+    //cout << "dz is " << zSize << endl;
     float t = -dz/sundir.z;
+    //cout << "T is " << t << endl;
 	for (int i=panel.z+1; i<this->maxZ; i++) {
 		//find intersection point on next possible level (px,py,pz)
         float px = c.x - (i-panel.z) * sundir.x*t;
         float py = c.y - (i-panel.z) * sundir.y*t;
         float pz = c.z + (i-panel.z) * dz;
+        //cout << "Testing " << px << ", " << py << ", " << pz << endl;
 		//find indices of panel associated with intersection point
         int pxind = (int) floor(px/(this->xSize));
         int pyind = (int) floor(py/(this->ySize));
         int pzind = (int) floor(pz/(this->zSize));
-		//check if panel exists at this location
-        if (pxind >= 0 && pxind < this->exists.size() && pyind >= 0 && pyind < this->exists[pxind].size() && pzind >= 0 && pzind < this->exists[pxind][pyind].size()) {
-            // make sure that this is a valid index before checking
+        //cout << "Testing " << pxind << ", " << pyind << ", " << pzind << endl;
+        // make sure that this is a valid index before checking
+        if (pxind >= 0 && pxind < this->exists.size() &&
+            pyind >= 0 && pyind < this->exists[pxind].size() &&
+            pzind >= 0 && pzind < this->exists[pxind][pyind].size()) {
+            //cout << "In if" << endl;
             if (this->exists[pxind][pyind][pzind] == 1) {
                 shade = 1;
                 break;
@@ -98,12 +107,11 @@ int Building::getThirdDimension(int i, int j) const {
 }
 
 bool Building::floorExists(int i, int j, int k) const {
-    myAssert(i >= 0);
-    myAssert(i < this->exists.size());
-    myAssert(j >= 0);
-    myAssert(j < this->exists[i].size());
-    myAssert(k >= 0);
-    myAssert(k < this->exists[i][j].size());
+    if (i < 0 || i >= this->exists.size() ||
+        j < 0 || j >= this->exists[i].size() ||
+        k < 0 || k >= this->exists[i][j].size()) {
+        return false;
+    }
     return this->exists[i][j][k];
 }
 
@@ -125,6 +133,9 @@ ostream& operator<< (ostream& os, Building& b) {
     // save the first size
     int i, j, k;
     int size = b.getDimension();
+    os << "Xsize: " << b.xSize << endl;
+    os << "Ysize: " << b.ySize << endl;
+    os << "Zsize: " << b.zSize << endl;
     os << "Size: " << size << endl;
     for (i = 0; i < size; i++) {
         int secondDimension = b.getSecondDimension(i);
@@ -147,12 +158,25 @@ istream& operator>> (istream& is, Building& b) {
     int k = -1;
 
     string str;
+
+    is >> str;
+    myAssert(str.compare("Xsize:") == 0);
+    is >> b.xSize;
+
+    is >> str;
+    myAssert(str.compare("Ysize:") == 0);
+    is >> b.ySize;
+
+    is >> str;
+    myAssert(str.compare("Zsize:") == 0);
+    is >> b.zSize;
+
     is >> str;
     myAssert(str.compare("Size:") == 0);
-
     int size;
     is >> size;
     b.exists.resize(size);
+
     while (is >> str) {
         // read through each word
         if (str.compare("panel:") == 0) {
@@ -184,6 +208,9 @@ istream& operator>> (istream& is, Building& b) {
             break;
         }
     }
+
+    b.makeCentroids();
+
     return is;
 }
 

@@ -1,6 +1,7 @@
 #include "model/building.hpp"
 #include "model/sun.hpp"
 #include "model/value.hpp"
+#include "model/exposureValue.hpp"
 #include "helpers.hpp"
 #include <string>
 #include <iostream>
@@ -259,7 +260,7 @@ int main(int argc, char *argv[]) {
     smallMatrix[1][1][1] = 1;
     Building *smallBldg = new Building(smallMatrix, 1, 1, 1);
     Sun *secondSun = new Sun(10, 5);
-    Value *value = new Value();
+    ExposureValue *value = new ExposureValue();
 
     // test the calculateExposure function
     indices panelOne;

@@ -8,8 +8,9 @@ class Sun;
 
 class Value {
     public:
-        Value();
-        ~Value();
+        Value() {};
+
+        virtual ~Value() {};
         /*
          * Method: getValue
          * 
@@ -24,21 +25,7 @@ class Value {
          *
          * Returns a float value for the design.
          */
-        float getValue(const Building *bldg, const Sun *sun) const;
-        /*
-         * Method: calculateExposure
-         *
-         * Calculates the number of hours of exposer a given floor panel
-         * receives. This number is the number of samples for which it is
-         * exposed to sun divided by the total number of sun samples taken.
-         *
-         * Parameters:
-         * panelIndices - the indices of the floor panel
-         * sun - the sun model being used
-         *
-         * Returns a float value equal to the number of hours of sunlight.
-         */
-        float calculateExposure(const indices panelIndices, const Building *bldg, const Sun *sun) const;
+        virtual float getValue(const Building *bldg, const Sun *sun) const = 0;
 
     private:
 };

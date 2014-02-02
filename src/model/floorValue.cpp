@@ -1,19 +1,20 @@
-#include "model/value.hpp"
+#include "model/floorValue.hpp"
+
+FloorValue::FloorValue() {
+
+}
+
+FloorValue::~FloorValue() {
+
+}
+
 #include "model/sun.hpp"
 #include "model/building.hpp"
 #include <iostream>
 
 using namespace std;
 
-Value::Value() {
-
-}
-
-Value::~Value() {
-
-}
-
-float Value::getValue(const Building *bldg, const Sun *sun) const {
+float FloorValue::getValue(const Building *bldg, const Sun *sun) const {
     // for each square of the building, if it exists, calculate its exposure
     int i, j, k;
     float total = 0;
@@ -26,7 +27,7 @@ float Value::getValue(const Building *bldg, const Sun *sun) const {
                     panelIndices.x = i;
                     panelIndices.y = j;
                     panelIndices.z = k;
-                    float exposure = this->calculateExposure(panelIndices, bldg, sun);
+                    float exposure = (this->numberAdjacent(panelIndices, bldg) - 1) * this->calculateExposure(panelIndices, bldg, sun);
                     total += exposure;
                 }
             }
@@ -36,7 +37,7 @@ float Value::getValue(const Building *bldg, const Sun *sun) const {
     return total;
 }
 
-float Value::calculateExposure(const indices panelIndices, const Building *bldg, const Sun *sun) const {
+float FloorValue::calculateExposure(const indices panelIndices, const Building *bldg, const Sun *sun) const {
     int i;
     int num = sun->getNumberOfSamples();
     float total = 0;
@@ -47,4 +48,11 @@ float Value::calculateExposure(const indices panelIndices, const Building *bldg,
         total += !shaded;
     }
     return total/(float)num;
+}
+
+float FloorValue::numberAdjacent(const indices panelIndices, const Building *bldg) const {
+    return bldg->floorExists(panelIndices.x, panelIndices.y+1, panelIndices.z) +
+        bldg->floorExists(panelIndices.x-1, panelIndices.y, panelIndices.z) +
+        bldg->floorExists(panelIndices.x+1, panelIndices.y, panelIndices.z) +
+        bldg->floorExists(panelIndices.x, panelIndices.y-1, panelIndices.z);
 }
