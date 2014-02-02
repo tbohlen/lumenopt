@@ -1,24 +1,22 @@
 #ifndef VISUALIZER_H
 #define VISUALIZER_H
 
-#include <vector>
+class Building;
+class Sun;
 
 class Visualizer {
     public:
-        Visualizer(std::vector<std::vector<std::vector<bool> > > building, float xSize, float ySize, float zSize);
+        Visualizer(Building *building, Sun *sun);
         void draw();
+        void nextSunPosition();
 
     private:
-        std::vector<std::vector<std::vector<bool> > > building;
-        int xDivs;
-        int yDivs;
-        int zDivs;
+        Building *building;
+        Sun *sun;
         float xSize;
         float ySize;
         float zSize;
-        float xDivSize;
-        float yDivSize;
-        float zDivSize;
+        int sunIndex;
 };
 
 #endif

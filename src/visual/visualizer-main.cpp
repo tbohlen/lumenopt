@@ -17,6 +17,7 @@
 #include "visual/GLcamera.hpp"
 #include "visual/Visualizer.hpp"
 #include "model/building.hpp"
+#include "model/sun.hpp"
 
 using namespace std;
 
@@ -36,27 +37,7 @@ namespace
         // seed the random number generator with the current time
         srand( time( NULL ) );
 
-        // create a building model
-        // building will be 3 by 3 by 3
-        int i;
-        int j;
-        int k;
-
-        cout << "Building building vector..." << endl;
-
-        vector<vector<vector<bool> > > building;
-        building.resize(3);
-        for (i = 0; i < 3; i++) {
-            building[i].resize(3);
-            for (j = 0; j < 3; j++) {
-                building[i][j].resize(3);
-                for (k = 0; k < 3; k++) {
-                    if (j != k || i == 0) {
-                        building[i][j][k] = true;
-                    }
-                }
-            }
-        }
+        cout << "Parsing building..." << endl;
 
         Building *bldg = new Building();
         string fName = "../model/best.bldg";
@@ -65,8 +46,11 @@ namespace
         templateFile >> *bldg;
         templateFile.close();
 
+        // build the sun
+        Sun *sun = new Sun(10, 12);
+
         // build the visualizer
-        visualizer = new Visualizer(bldg->exists, 1., 1., 1.);
+        visualizer = new Visualizer(bldg, sun);
     }
 
 
@@ -101,6 +85,12 @@ namespace
                     Matrix4f eye = Matrix4f::identity();
                     camera.SetRotation( eye );
                     camera.SetCenter( Vector3f::ZERO );
+                    break;
+                }
+            case 'n':
+                {
+                    visualizer->nextSunPosition();
+                    // go to next sum position
                     break;
                 }
             default:
@@ -287,7 +277,7 @@ int main( int argc, char* argv[] )
 
     camera.SetDimensions( 600, 600 );
 
-    camera.SetDistance( 10 );
+    camera.SetDistance( 20 );
     camera.SetCenter( Vector3f::ZERO );
 
     glutCreateWindow("Assignment 4");

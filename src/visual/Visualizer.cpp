@@ -1,6 +1,8 @@
 #include "visual/Visualizer.hpp"
 #include <assert.h>
 #include "vecmath/vecmath.h"
+#include "model/building.hpp"
+#include "model/sun.hpp"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -11,7 +13,11 @@
 
 using namespace std;
 
-Visualizer::Visualizer(vector<vector<vector<bool> > > building, float xSize, float ySize, float zSize) : building(building), xSize(xSize), ySize(ySize), zSize(zSize) {
+Visualizer::Visualizer(Building *building, Sun *sun) : building(building), sun(sun) {
+    this->sunIndex = 0;
+    this->xSize = building->getXSize();
+    this->ySize = building->getYSize();
+    this->zSize = building->getZSize();
 }
 
 void Visualizer::draw() {
@@ -20,26 +26,42 @@ void Visualizer::draw() {
     int j;
     int k;
 
+    coord sunDir = sun->getDirectionForIndex(this->sunIndex);
+
     // draw each particle
     glPushMatrix();
 
     glShadeModel(GL_SMOOTH);
     GLfloat floorColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, floorColor);
-    glPushAttrib(GL_ALL_ATTRIB_BITS);
-
+    GLfloat shadowColor[] = {0.2f, 0.2f, 0.2f, 1.0f};
     glBegin(GL_TRIANGLES);
 
-    for (i = 0; i < this->building.size(); i++) {
-        for (j = 0; j < this->building[0].size(); j++) {
-            for (k = 0; k < this->building[0][0].size(); k++) {
-                if (this->building[i][j][k]) {
+    for (i = 0; i < this->building->getDimension(); i++) {
+        for (j = 0; j < this->building->getSecondDimension(i); j++) {
+            for (k = 0; k < this->building->getThirdDimension(i, j); k++) {
+                if (this->building->floorExists(i, j, k)) {
+                    // set the material
+                    indices ind;
+                    ind.x = i;
+                    ind.y = j;
+                    ind.z = k;
+
+                    bool shaded = this->building->inShade(ind, sunDir);
+                    if (shaded) {
+                        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, shadowColor);
+                    }
+                    else {
+                        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, floorColor);
+                    }
+
+                    glPushAttrib(GL_ALL_ATTRIB_BITS);
+
                     // then build the triangle
                     float left = i * this->xSize;
                     float right = (i + 1) * this->xSize;
-                    float height = j * this->ySize;
-                    float back = k * this->zSize;
-                    float front = (k + 1) * this->zSize;
+                    float back = j * this->ySize;
+                    float front = (j + 1) * this->ySize;
+                    float height = k * this->zSize;
 
                     Vector3f leftFront(left, height, front);
                     Vector3f leftBack(left, height, back);
@@ -66,14 +88,18 @@ void Visualizer::draw() {
                     glNormal3f(0., 1., 0.);
                     glVertex3f(rightBack[0], rightBack[1],rightBack[2]);
 
+                    // pop the material
+                    glPopAttrib();
                 }
             }
         }
     }
-
     glEnd();
 
-    glPopAttrib();
-
     glPopMatrix();
+}
+
+void Visualizer::nextSunPosition() {
+    this->sunIndex = (this->sunIndex + 1) % sun->getNumberOfSamples();
+    cout << "Switching sun position to " << this->sunIndex << endl;
 }
