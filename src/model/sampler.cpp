@@ -5,10 +5,12 @@
 using namespace std;
 
 Sampler::Sampler(Building *templateBldg) : templateBldg(templateBldg) {
-
+    this->bernoulli = bernoulli_distribution(0.5);
 }
 
-boolMatrix Sampler::generateSample(bernoulli_distribution &distribution, default_random_engine &generator) {
+Sampler::~Sampler() {}
+
+boolMatrix Sampler::generateSample() {
     int i;
     int j;
     int k;
@@ -23,7 +25,7 @@ boolMatrix Sampler::generateSample(bernoulli_distribution &distribution, default
             int kDimension = this->templateBldg->getThirdDimension(i, j);
             sample[i][j].resize(kDimension);
 			for (k = 0; k < kDimension; k++) {
-                sample[i][j][k] = distribution(generator);
+                sample[i][j][k] = this->bernoulli(this->generator);
 			}
 		}
 	}

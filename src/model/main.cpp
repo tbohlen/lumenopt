@@ -6,19 +6,18 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <random>
 #include "model/building.hpp"
-#include "model/sampler.hpp"
+#include "model/spaceSampler.hpp"
 #include "model/floorValue.hpp"
 #include "model/sun.hpp"
 #include "types.hpp"
 
-#define DIM 4
-#define SECOND_DIM 4
-#define THIRD_DIM 6
+#define DIM 3
+#define SECOND_DIM 3
+#define THIRD_DIM 10
 #define XSIZE 1
 #define YSIZE 1
-#define ZSIZE 1
+#define ZSIZE 0.5
 
 using namespace std;
 
@@ -103,17 +102,14 @@ int main( int argc, char *argv[]) {
 
     // build a sampler using that template
     cout << "Building sampler" << endl;
-    Sampler *sampler = new Sampler(templateBuilding);
+    Sampler *sampler = new SpaceSampler(templateBuilding);
     Building *bestBuilding = NULL;
     float bestScore = 0;
-
-    default_random_engine generator;
-    bernoulli_distribution distribution(0.5);
 
     // run the test a bunch of times
     cout << "Running monte carlo" << endl;
     for (i = 0; i < runs; i++) {
-        boolMatrix exists = sampler->generateSample(distribution, generator);
+        boolMatrix exists = sampler->generateSample();
         Building *bldg = new Building(exists, XSIZE, YSIZE, ZSIZE);
         // test the building
         float score = value->getValue(bldg, sun);
@@ -132,13 +128,15 @@ int main( int argc, char *argv[]) {
     }
 
     // save the building
-    cout << "Saving best with score " << bestScore << endl;
-    ofstream saveFile(fName);
-    saveFile << *bestBuilding;
-    saveFile.close();
+    if (bestBuilding != NULL) {
+        cout << "Saving best with score " << bestScore << endl;
+        ofstream saveFile(fName);
+        saveFile << *bestBuilding;
+        saveFile.close();
+        delete bestBuilding;
+    }
 
     cout << "Cleaning up" << endl;
-    if (bestBuilding != NULL) { delete bestBuilding; }
     delete sampler;
     delete sun;
     delete templateBuilding;

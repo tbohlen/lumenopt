@@ -1,15 +1,16 @@
-#ifndef SAMPLER_H
-#define SAMPLER_H
+#ifndef SPACESAMPLER_H
+#define SPACESAMPLER_H
 
+#include "model/sampler.hpp"
 #include "types.hpp"
 #include <random>
 
 class Building;
 
-class Sampler {
+class SpaceSampler: public Sampler {
     public:
         /*
-         * Constructor: Sampler
+         * Constructor: SpaceSampler
          *
          * Builds the sampler with a template building that is the correct
          * dimensions. Each sample generated will have the same dimensions as
@@ -18,9 +19,9 @@ class Sampler {
          * Parameters:
          * templateBldg - the template building object
          */
-        Sampler(Building *templateBldg);
+        SpaceSampler(Building *templateBldg);
 
-        virtual ~Sampler();
+        ~SpaceSampler();
 
         /*
          * Method: generateSample
@@ -31,10 +32,9 @@ class Sampler {
          * Returns a boolMatrix describing the building.
          */
         virtual boolMatrix generateSample();
-    protected:
-        Building *templateBldg;
-        std::default_random_engine generator;
-        std::bernoulli_distribution bernoulli;
+    private:
+        std::uniform_int_distribution<int> intDistribution;
+        void extendFloor(indices p, boolMatrix &sample, boolMatrix &touched);
 };
 
 #endif

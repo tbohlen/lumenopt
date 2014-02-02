@@ -73,9 +73,18 @@ class Building {
          */
         bool floorExists(int i, int j, int k) const;
 
+        /*
+         * Method: inbounds
+         *
+         * Returns true if the indices provided are within the bounds of the
+         * building. The floor need not exist there.
+         */
+        bool inbounds(indices ind) const;
+
         float getXSize() const;
         float getYSize() const;
         float getZSize() const;
+        int getMaxZ() const;
 
         friend std::istream& operator>> (std::istream& is, Building& b);
         friend std::ostream& operator<< (std::ostream& os, Building& b);

@@ -27,7 +27,7 @@ float FloorValue::getValue(const Building *bldg, const Sun *sun) const {
                     panelIndices.x = i;
                     panelIndices.y = j;
                     panelIndices.z = k;
-                    float exposure = (this->numberAdjacent(panelIndices, bldg) - 1) * this->calculateExposure(panelIndices, bldg, sun);
+                    float exposure = (this->numberAdjacent(panelIndices, bldg)) * this->calculateExposure(panelIndices, bldg, sun);
                     total += exposure;
                 }
             }

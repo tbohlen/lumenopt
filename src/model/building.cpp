@@ -107,12 +107,22 @@ int Building::getThirdDimension(int i, int j) const {
 }
 
 bool Building::floorExists(int i, int j, int k) const {
-    if (i < 0 || i >= this->exists.size() ||
-        j < 0 || j >= this->exists[i].size() ||
-        k < 0 || k >= this->exists[i][j].size()) {
+    indices ind;
+    ind.x = i;
+    ind.y = j;
+    ind.z = k;
+
+    if (!this->inbounds(ind)) {
         return false;
     }
+
     return this->exists[i][j][k];
+}
+
+bool Building::inbounds(indices ind) const {
+    return ind.x >= 0 && ind.x < this->exists.size() &&
+        ind.y >= 0 && ind.y < this->exists[ind.x].size() &&
+        ind.z >= 0 && ind.z < this->exists[ind.x][ind.y].size();
 }
 
 float Building::getXSize() const {
@@ -123,6 +133,10 @@ float Building::getYSize() const {
 }
 float Building::getZSize() const {
     return this->zSize;
+}
+
+int Building::getMaxZ() const {
+    return this->maxZ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
