@@ -63,10 +63,10 @@ void Visualizer::draw() {
                     float front = (j + 1) * this->ySize;
                     float height = k * this->zSize;
 
-                    Vector3f leftFront(left, height, front);
-                    Vector3f leftBack(left, height, back);
-                    Vector3f rightFront(right, height, front);
-                    Vector3f rightBack(right, height, back);
+                    Vector3f leftFront(front, height, left);
+                    Vector3f leftBack(back, height, left);
+                    Vector3f rightFront(front, height, right);
+                    Vector3f rightBack(back, height, right);
 
                     // first triangle
                     glNormal3f(0., 1., 0.);

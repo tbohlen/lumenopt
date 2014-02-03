@@ -95,7 +95,8 @@ namespace
                 }
             default:
                 {
-                cout << "Unhandled key press " << key << "." << endl;
+                    cout << "Unhandled key press " << key << "." << endl;
+                    break;
                 }
         }
 
