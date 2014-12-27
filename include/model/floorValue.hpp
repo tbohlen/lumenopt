@@ -30,7 +30,9 @@ class FloorValue : public Value {
          *
          * Calculates the number of hours of exposer a given floor panel
          * receives. This number is the number of samples for which it is
-         * exposed to sun divided by the total number of sun samples taken.
+         * exposed to sun divided by the total number of sun samples taken. This
+         * number is then multiplied by the number of adjacent panels in order
+         * to weight more heavily squares that will have more use.
          *
          * Parameters:
          * panelIndices - the indices of the floor panel

@@ -67,7 +67,7 @@ int main( int argc, char *argv[]) {
     cout << "Building the template building" << endl;
     Building *templateBuilding;
     if (templateFileName.compare("NO FILE NAME PROVIDED") == 0) {
-        // a template has been provided so load it
+        // no template has been provided, so we need to build our own
         cout << "No template file provided. Building from scratch" << endl;
         // build the matrix describing the building
         boolMatrix example(DIM);
